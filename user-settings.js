@@ -9,8 +9,7 @@ export default function (context) {
         global: {
             options: {
                 responsiveValue: Placard.getResponsiveRatio({context}),
-                ejectXY: false, /* # if ejected (i.e. `ejectXY = true || !false`), it shift origin to user-agent's (browser's) defaults, usually it's a top-left corner of browser's viewport, rather than opinionated middle of the viewport */
-                lineWidth: 12,
+                lineWidth: 4,
                 strokeStyle: 'grey',
             }
         },

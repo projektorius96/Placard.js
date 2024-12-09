@@ -12,7 +12,9 @@ export function setAngle(angle) {
     let x21 = -sin;
     let y22 = cos;
 
-    return [x11, y12, x21, y22];
+    return (
+        [x11, y12, x21, y22].map((component)=> component *= window.devicePixelRatio)
+    );
 
 }
 
