@@ -23,14 +23,21 @@ export default class grid {
 
             context.beginPath();
             context.rect(x, y, xLen, yLen);
-            context.kind = options.kind || 'grid';
-            context.lineWidth = options.lineWidth || context.global.options.lineWidth;
-            context.strokeStyle = options.strokeStyle || context.global.options.strokeStyle;
-            context.stroke();
+            context.kind = options?.kind || 'grid';
+            context.lineWidth = options?.lineWidth || context.global.options.lineWidth;
+            context.strokeStyle = options?.strokeStyle || context.global.options.strokeStyle;
+            /* context.stroke(); */
+
+            options.hidden ? false : context.stroke();
 
         }
 
-        const divisorY = Math.ceil( ( context.canvas.clientHeight / gridcellDim ) );
+        /* const divisorY = Math.ceil( ( context.canvas.clientHeight / gridcellDim ) ); */
+        let
+            divisorX = Math.ceil( stage.clientWidth / gridcellDim )
+            ,
+            divisorY = Math.ceil( stage.clientHeight / gridcellDim )
+        ;
         ;[...new Array(divisorY)].map((v, row)=>{
 
             return v = 1+row;
@@ -52,7 +59,7 @@ export default class grid {
 
         });
 
-        return options;
+        return true;
     
     }
 

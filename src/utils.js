@@ -36,8 +36,22 @@ Object.defineProperties(Function.prototype, {
  */
 export function responsify({stage, stageScale}){
 
+    let
+        GRIDCELL_DIM = ( stage.clientWidth / evenNumber( stageScale ) )
+        ,
+        divisorX = Math.ceil( stage?.clientWidth / GRIDCELL_DIM )
+        ,
+        divisorY = Math.ceil( stage?.clientHeight / GRIDCELL_DIM )
+        ,
+        X_IN_MIDDLE = ( ( ( divisorX * GRIDCELL_DIM ) ) / 2 )
+        ,  
+        Y_IN_MIDDLE = ( ( ( divisorY * GRIDCELL_DIM )  ) / 2 )
+    ;
+
     stage.grid = {
-        GRIDCELL_DIM : ( stage.clientWidth / evenNumber( stageScale ) )
+        GRIDCELL_DIM,
+        X_IN_MIDDLE: X_IN_MIDDLE * window.devicePixelRatio, 
+        Y_IN_MIDDLE: Y_IN_MIDDLE * window.devicePixelRatio,
     }
     
     const muttable = {
