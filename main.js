@@ -16,9 +16,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
             stage.add([
                 new Placard.ViewGroup.Layer({name: 'grid', opacity: 0.25, hidden: !true})
                 ,
-                new Placard.ViewGroup.Layer({name: 'diagonals', hidden: true})
+                new Placard.ViewGroup.Layer({name: 'wireframe', hidden: !true})
                 ,
-                new Placard.ViewGroup.Layer({name: 'polygon'})
+                new Placard.ViewGroup.Layer({name: 'polygon', hidden: true})
                 ,
             ]);
         
@@ -84,7 +84,7 @@ function setViews(stage) {
                             options: {
                                 strokeStyle: COLORS.blue.value,
                                 points: [ 
-                                    [( 3 * stage.grid.GRIDCELL_DIM ) , ( 3 * stage.grid.GRIDCELL_DIM/*  * Placard.Views.Line.DEFAULT_SIN_ANGLE */ )] 
+                                    [( 3 * stage.grid.GRIDCELL_DIM ) , ( 3 * stage.grid.GRIDCELL_DIM )] 
                                 ]
                                 ,
                                 overrides: {
@@ -108,55 +108,23 @@ function setViews(stage) {
                     ]
                 break;
 
-                case 'diagonals':
-                    // DEV_NOTE # we can write an idiomatic `canvas.stack` and assign an Array with items, whereas each item (if any), is a voided function with it's anonymous implementation:..
+                case 'wireframe':
+                    const { ident, reversed_ident } = Placard.Views.Wireframe.ENUMS.TYPE
                     canvas.stack = [
-                        void function () {
-
-                            // PREREQUISITE # The `context.{translate|rotate|scale}` if any, goes before any paths...
-                            // ...
-            
-                            context.beginPath();
-                                context.moveTo(
-                                    0
-                                    , 
-                                    0
-                                );
-                                context.lineTo(
-                                    window.innerWidth * devicePixelRatio
-                                    , 
-                                    window.innerHeight * devicePixelRatio
-                                );
-                            context.closePath();
-    
-                            context.lineWidth = context.global.options.lineWidth;
-                            context.strokeStyle = 'red';
-                            context.fillStroke();
-    
-                        }()
+                        Placard.Views.Wireframe.draw({
+                            canvas,
+                            options: {
+                                type: ident.value
+                            }
+                        })
                         ,
-                        void function () {
-    
-                            // PREREQUISITE # The `context.{translate|rotate|scale}` if any, goes before any paths...
-                            // ...
-    
-                            context.beginPath();
-                                context.moveTo(
-                                    window.innerWidth * devicePixelRatio
-                                    , 
-                                    0
-                                );
-                                context.lineTo(
-                                    0
-                                    , 
-                                    window.innerHeight * devicePixelRatio
-                                );
-                            context.closePath();
-                            
-                            context.lineWidth = context.global.options.lineWidth;
-                            context.strokeStyle = 'green';
-                            context.fillStroke();
-                        }()
+                        Placard.Views.Wireframe.draw({
+                            canvas,
+                            options: {
+                                type: reversed_ident.value,
+                                strokeStyle: COLORS.red.value
+                            }
+                        })
                         ,
                     ];
                 break;

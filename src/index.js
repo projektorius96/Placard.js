@@ -4,6 +4,7 @@ import { stage_view } from './views/stage-view';
 import { layer_view } from './views/layer-view';
 import Grid from "./views/grid";
 import Line from "./views/line";
+import Wireframe from "./views/wireframe";
 
 /**
  * @typedef {Array} Iterable
@@ -46,6 +47,7 @@ export default class {
     static Views = {
         Grid,
         Line,
+        Wireframe,
     }
 
     static Helpers = {
