@@ -141,7 +141,7 @@ function setViews(stage) {
                             Placard.Views.Line.draw({
                                 canvas,
                                 options: {
-                                    kind: 'ring', /* DEV_TIP # give a value of kind, such as '!ring' and see it being differentiated back to 'circle' | Default: 'circle' */
+                                    kind: !true ? 'circle' : 'ring',
                                     strokeStyle: COLORS.green.value,
                                     points: [ 
                                         [scalar * Math.cos(point) , scalar * Math.sin(point)],
