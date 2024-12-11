@@ -135,7 +135,7 @@ function setViews(stage) {
                 case stage.layers.circle.id:
                     context.setTransform(...setAngle(0), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);      
                     canvas.stack = [
-                        setRange(0, 1, 720, false)
+                        setRange(0, 0.1 /* <=== cheap 'anti-aliasing' */, 720, false)
                         .forEach((point)=>{
                             let scalar = ( 3 * stage.grid.GRIDCELL_DIM );
                             Placard.Views.Line.draw({
