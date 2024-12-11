@@ -3,6 +3,7 @@ import setUserSettings from './user-settings';
 import package_json from './package.json' with {type: 'json'}; // DEV_NOTE # web.dev suggest to use this line onLY in non-PWA case
 
 const { COLORS } = Placard.Views.Line.ENUMS;
+const { setRange } = Placard.Helpers.Misc;
 const { degToRad, setAngle } = Placard.Helpers.Trigonometry;
 
 document.addEventListener('DOMContentLoaded', ()=>{
@@ -16,9 +17,11 @@ document.addEventListener('DOMContentLoaded', ()=>{
             stage.add([
                 new Placard.ViewGroup.Layer({name: 'grid', opacity: 0.25, hidden: !true})
                 ,
-                new Placard.ViewGroup.Layer({name: 'wireframe', hidden: !true})
+                new Placard.ViewGroup.Layer({name: 'wireframe', hidden: true})
                 ,
                 new Placard.ViewGroup.Layer({name: 'polygon', hidden: true})
+                ,
+                new Placard.ViewGroup.Layer({name: 'circle', hidden: !true})
                 ,
             ]);
         
@@ -127,6 +130,33 @@ function setViews(stage) {
                         })
                         ,
                     ];
+                break;
+
+                case stage.layers.circle.id:
+                    context.setTransform(...setAngle(0), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);      
+                    canvas.stack = [
+                        setRange(0, 1, 720, false)
+                        .forEach((point)=>{
+                            let scalar = ( 3 * stage.grid.GRIDCELL_DIM );
+                            Placard.Views.Line.draw({
+                                canvas,
+                                options: {
+                                    kind: 'ring', /* DEV_TIP # give a value of kind, such as '!ring' and see it being differentiated back to 'circle' | Default: 'circle' */
+                                    strokeStyle: COLORS.green.value,
+                                    points: [ 
+                                        [scalar * Math.cos(point) , scalar * Math.sin(point)],
+                                    ],
+                                    overrides: {
+                                        transform: {
+                                            // DEV_NOTE # without this, the 'ring' would look more like an oval, rather a circle, thus we have to rotate it 45 degrees
+                                            angle: (point >= 360 ? 45 : 0)
+                                        }
+                                    }
+                                }
+                            })
+                        })
+                        ,
+                    ]
                 break;
 
             endswitch:;}

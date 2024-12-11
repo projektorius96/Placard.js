@@ -52,13 +52,28 @@ export default class {
         context.beginPath();
 
             options.points
-            .forEach((point)=>{
-                
-                context.moveTo(
-                    0
-                    , 
-                    0
-                );
+            .forEach((point, i)=>{
+
+                if (i === 0){
+
+                    switch (options.kind) {
+                        case 'ring':
+                            context.moveTo(
+                                ( context.global.options.responsiveValue * ( point[0] ) ) - (options.lineWidth ||  context.global.options.lineWidth)
+                                , 
+                                ( context.global.options.responsiveValue * ( point[1] ) ) - (options.lineWidth ||  context.global.options.lineWidth)
+                            );
+                            break;
+                        default /* === 'circle' */:
+                            context.moveTo(
+                                0
+                                , 
+                                0
+                            );
+                            break;
+                    }
+
+                }
                 context.lineTo(
                     (context.global.options.responsiveValue * (point[0]))
                     , 
