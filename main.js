@@ -1,8 +1,9 @@
 import Placard from './src/index';
-import setUserSettings from './user-settings';
+import UserSettings from './user-settings';
 import package_json from './package.json' with {type: 'json'}; // DEV_NOTE # web.dev suggest to use this line onLY in non-PWA case
 
 const { COLORS } = Placard.Views.Line.ENUMS;
+const { setRange } = Placard.Helpers.Misc;
 const { degToRad, setAngle } = Placard.Helpers.Trigonometry;
 
 document.addEventListener('DOMContentLoaded', ()=>{
@@ -16,9 +17,11 @@ document.addEventListener('DOMContentLoaded', ()=>{
             stage.add([
                 new Placard.ViewGroup.Layer({name: 'grid', opacity: 0.25, hidden: !true})
                 ,
-                new Placard.ViewGroup.Layer({name: 'wireframe', hidden: !true})
+                new Placard.ViewGroup.Layer({name: 'wireframe', hidden: true})
                 ,
                 new Placard.ViewGroup.Layer({name: 'polygon', hidden: true})
+                ,
+                new Placard.ViewGroup.Layer({name: 'circle', hidden: !true})
                 ,
             ]);
         
@@ -34,7 +37,7 @@ function setViews(stage) {
     .init({stage, stageScale: 25 /* <=== # thumb of rule is between 15-20 (in relative units) */})
     .on((context)=>{
 
-        if ( setUserSettings(context)  ) {
+        if ( UserSettings.init({context})  ) {
 
             let canvas = context.canvas;
             switch (canvas.name) {
@@ -58,7 +61,7 @@ function setViews(stage) {
                             options: {
                                 strokeStyle: COLORS.red.value,
                                 points: [ 
-                                    [( 3 * stage.grid.GRIDCELL_DIM ) , ( 3 * stage.grid.GRIDCELL_DIM/*  * Placard.Views.Line.DEFAULT_SIN_ANGLE */ )],
+                                    [( context.global.options.scalingValue * stage.grid.GRIDCELL_DIM ) , ( context.global.options.scalingValue * stage.grid.GRIDCELL_DIM/*  * Placard.Views.Line.DEFAULT_SIN_ANGLE */ )],
                                 ]
                             }
                         })
@@ -68,7 +71,7 @@ function setViews(stage) {
                             options: {
                                 strokeStyle: COLORS.green.value,
                                 points: [ 
-                                    [( 3 * stage.grid.GRIDCELL_DIM * Placard.Views.Line.RIGHTANGLE_SLOPE ) , ( 3 * stage.grid.GRIDCELL_DIM * Placard.Views.Line.RIGHTANGLE_SLOPE )],
+                                    [( context.global.options.scalingValue * stage.grid.GRIDCELL_DIM * Placard.Views.Line.RIGHTANGLE_SLOPE ) , ( context.global.options.scalingValue * stage.grid.GRIDCELL_DIM * Placard.Views.Line.RIGHTANGLE_SLOPE )],
                                 ]
                                 ,
                                 overrides: {
@@ -84,14 +87,14 @@ function setViews(stage) {
                             options: {
                                 strokeStyle: COLORS.blue.value,
                                 points: [ 
-                                    [( 3 * stage.grid.GRIDCELL_DIM ) , ( 3 * stage.grid.GRIDCELL_DIM )] 
+                                    [( context.global.options.scalingValue * stage.grid.GRIDCELL_DIM ) , ( context.global.options.scalingValue * stage.grid.GRIDCELL_DIM )] 
                                 ]
                                 ,
                                 overrides: {
                                     transform: {
                                         translation: {
-                                            x: 3 * stage.grid.GRIDCELL_DIM,
-                                            y: 3 * stage.grid.GRIDCELL_DIM,
+                                            x: context.global.options.scalingValue * stage.grid.GRIDCELL_DIM,
+                                            y: context.global.options.scalingValue * stage.grid.GRIDCELL_DIM,
                                         }
                                         ,
                                         angle: degToRad(0)
@@ -127,6 +130,33 @@ function setViews(stage) {
                         })
                         ,
                     ];
+                break;
+
+                case stage.layers.circle.id:
+                    context.setTransform(...setAngle(0), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);      
+                    canvas.stack = [
+                        setRange(0, 0.1 /* <=== cheap 'anti-aliasing' */, 720, false)
+                        .forEach((point)=>{
+                            let scalar = ( context.global.options.scalingValue * stage.grid.GRIDCELL_DIM );
+                            Placard.Views.Line.draw({
+                                canvas,
+                                options: {
+                                    kind: !true ? 'circle' : 'ring',
+                                    strokeStyle: COLORS.green.value,
+                                    points: [ 
+                                        [scalar * Math.cos(point) , scalar * Math.sin(point)],
+                                    ],
+                                    overrides: {
+                                        transform: {
+                                            // DEV_NOTE # without this, the 'ring' would look more like an oval, rather a circle, thus we have to rotate it 45 degrees
+                                            angle: (point >= 360 ? 45 : 0)
+                                        }
+                                    }
+                                }
+                            })
+                        })
+                        ,
+                    ]
                 break;
 
             endswitch:;}
