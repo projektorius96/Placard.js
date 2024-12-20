@@ -1,6 +1,14 @@
-import Placard from './src/index';
+import Placard from './src';
 import UserSettings from './user-settings';
 import package_json from './package.json' with {type: 'json'}; // DEV_NOTE # web.dev suggest to use this line onLY in non-PWA case
+
+import { 
+    Ring
+    , 
+    Wireframe
+    , 
+    RightTriangle 
+} from './implementation';
 
 const { COLORS } = Placard.Views.Line.ENUMS;
 const { setRange } = Placard.Helpers.Misc;
@@ -19,9 +27,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 ,
                 new Placard.ViewGroup.Layer({name: 'wireframe', hidden: true})
                 ,
-                new Placard.ViewGroup.Layer({name: 'polygon', hidden: true})
+                new Placard.ViewGroup.Layer({name: 'right_triangle', hidden: !true})
                 ,
-                new Placard.ViewGroup.Layer({name: 'circle', hidden: !true})
+                new Placard.ViewGroup.Layer({name: 'ring', hidden: true})
                 ,
             ]);
         
@@ -40,9 +48,11 @@ function setViews(stage) {
         if ( UserSettings.init({context})  ) {
 
             let canvas = context.canvas;
+            
             switch (canvas.name) {
 
-                case 'grid':
+                /* === GRID === */
+                case 'grid' :
                     Placard.Views.Grid.draw({
                         canvas: stage.layers.grid, 
                         options: {
@@ -51,113 +61,26 @@ function setViews(stage) {
                     );
                 break;
 
-                case 'polygon':
-                    // DEV_NOTE # The line below control grouped (Layer-level) matrix transformation...
+                /* === RIGHT-TRIANGLE === */
+                case stage.layers.right_triangle.name :
+                    // DEV_NOTE # The line below control grouped (i.e. Layer-level) matrix transformation:
                     context.setTransform(...setAngle(0), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
 
-                    canvas.stack = [
-                        Placard.Views.Line.draw({
-                            canvas,
-                            options: {
-                                strokeStyle: COLORS.red.value,
-                                points: [ 
-                                    [( context.global.options.scalingValue * stage.grid.GRIDCELL_DIM ) , ( context.global.options.scalingValue * stage.grid.GRIDCELL_DIM/*  * Placard.Views.Line.DEFAULT_SIN_ANGLE */ )],
-                                ]
-                            }
-                        })
-                        ,
-                        Placard.Views.Line.draw({
-                            canvas,
-                            options: {
-                                strokeStyle: COLORS.green.value,
-                                points: [ 
-                                    [( context.global.options.scalingValue * stage.grid.GRIDCELL_DIM * Placard.Views.Line.RIGHTANGLE_SLOPE ) , ( context.global.options.scalingValue * stage.grid.GRIDCELL_DIM * Placard.Views.Line.RIGHTANGLE_SLOPE )],
-                                ]
-                                ,
-                                overrides: {
-                                    transform: {
-                                        angle: degToRad(45)
-                                    }
-                                }
-                            }
-                        })
-                        ,
-                        Placard.Views.Line.draw({
-                            canvas,
-                            options: {
-                                strokeStyle: COLORS.blue.value,
-                                points: [ 
-                                    [( context.global.options.scalingValue * stage.grid.GRIDCELL_DIM ) , ( context.global.options.scalingValue * stage.grid.GRIDCELL_DIM )] 
-                                ]
-                                ,
-                                overrides: {
-                                    transform: {
-                                        translation: {
-                                            x: context.global.options.scalingValue * stage.grid.GRIDCELL_DIM,
-                                            y: context.global.options.scalingValue * stage.grid.GRIDCELL_DIM,
-                                        }
-                                        ,
-                                        angle: degToRad(0)
-                                        ,
-                                        scale: {
-                                            x: -1,
-                                            y: 1
-                                        }
-                                    }
-                                }
-                            }
-                        })
-                        ,
-                    ]
+                    RightTriangle.draw({context, degToRad, COLORS});
+                break;
+                
+                /* === WIREFRAMES === */
+                case stage.layers.wireframe.name :
+                    Wireframe.draw({context, COLORS});
                 break;
 
-                case 'wireframe':
-                    const { ident, reversed_ident } = Placard.Views.Wireframe.ENUMS.TYPE
-                    canvas.stack = [
-                        Placard.Views.Wireframe.draw({
-                            canvas,
-                            options: {
-                                type: ident.value
-                            }
-                        })
-                        ,
-                        Placard.Views.Wireframe.draw({
-                            canvas,
-                            options: {
-                                type: reversed_ident.value,
-                                strokeStyle: COLORS.red.value
-                            }
-                        })
-                        ,
-                    ];
-                break;
-
-                case stage.layers.circle.id:
-                    context.setTransform(...setAngle(0), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);      
-                    canvas.stack = [
-                        setRange(0, 0.1 /* <=== cheap 'anti-aliasing' */, 720, false)
-                        .forEach((point)=>{
-                            let scalar = ( context.global.options.scalingValue * stage.grid.GRIDCELL_DIM );
-                            Placard.Views.Line.draw({
-                                canvas,
-                                options: {
-                                    kind: !true ? 'circle' : 'ring',
-                                    strokeStyle: COLORS.green.value,
-                                    points: [ 
-                                        [scalar * Math.cos(point) , scalar * Math.sin(point)],
-                                    ],
-                                    overrides: {
-                                        transform: {
-                                            // DEV_NOTE # without this, the 'ring' would look more like an oval, rather a circle, thus we have to rotate it 45 degrees
-                                            angle: (point >= 360 ? 45 : 0)
-                                        }
-                                    }
-                                }
-                            })
-                        })
-                        ,
-                    ]
-                break;
+                /* === RING === */
+                case stage.layers.ring.name :
+                    // DEV_NOTE # The line below control grouped (i.e. Layer-level) matrix transformation:
+                    context.setTransform(...setAngle(0), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
+                    
+                    Ring.draw({context, setRange, COLORS});
+                break ;
 
             endswitch:;}
 
