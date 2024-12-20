@@ -10,10 +10,7 @@ import {
     RightTriangle 
 } from './implementation';
 
-const { COLORS } = Placard.Views.Line.ENUMS;
-const { setRange } = Placard.Helpers.Misc;
-const { degToRad, setAngle } = Placard.Helpers.Trigonometry;
-
+const { setAngle } = Placard.Helpers.Trigonometry;
 document.addEventListener('DOMContentLoaded', ()=>{
 
     document.title = package_json.name;
@@ -33,13 +30,15 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 ,
             ]);
         
-            if ( setViews(stage) ) window.addEventListener('resize', setViews.bind(null, stage)) ;
+            if ( setViews(stage) ) {
+                window.addEventListener('resize', setViews.bind(null, stage))
+            }
 
         }
 
 });
 
-function setViews(stage) {
+function setViews(stage){
 
     Placard
     .init({stage, stageScale: 25 /* <=== # thumb of rule is between 15-20 (in relative units) */})
@@ -66,12 +65,12 @@ function setViews(stage) {
                     // DEV_NOTE # The line below control grouped (i.e. Layer-level) matrix transformation:
                     context.setTransform(...setAngle(0), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
 
-                    RightTriangle.draw({context, degToRad, COLORS});
+                    RightTriangle.draw({context});
                 break;
                 
                 /* === WIREFRAMES === */
                 case stage.layers.wireframe.name :
-                    Wireframe.draw({context, COLORS});
+                    Wireframe.draw({context});
                 break;
 
                 /* === RING === */
@@ -79,15 +78,15 @@ function setViews(stage) {
                     // DEV_NOTE # The line below control grouped (i.e. Layer-level) matrix transformation:
                     context.setTransform(...setAngle(0), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
                     
-                    Ring.draw({context, setRange, COLORS});
+                    Ring.draw({context});
                 break ;
 
             endswitch:;}
 
         endif:;}
         
-    endon:;});
+    endon:;})
 
     return true;
-    
+
 }
