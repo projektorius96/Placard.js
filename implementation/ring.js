@@ -1,7 +1,13 @@
 import Placard from '../src/index';
 export default class {
 
-    static draw({context, setRange, COLORS, kind = 'ring' /* kind =: {'ring'|'circle'} */}){
+    static draw({context, kind = 'ring' /* kind =: {'ring'|'circle'} */}){
+
+        const 
+            { COLORS } = Placard.Views.Line.ENUMS
+            ,
+            { setRange } = Placard.Helpers.Misc
+            ;
         
         return ([
             setRange(0, 0.1 /* <=== cheap 'anti-aliasing' */, 720, false)

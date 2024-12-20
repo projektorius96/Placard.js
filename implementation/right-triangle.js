@@ -2,10 +2,15 @@ import Placard from '../src/index';
 
 export default class {
 
-    static draw({context, degToRad, COLORS}){
+    static draw({context}) {
+
+        const 
+            { COLORS } = Placard.Views.Line.ENUMS
+            ,
+            { degToRad } = Placard.Helpers.Trigonometry
+            ;
 
         let { canvas } = context;
-
         return([
             Placard.Views.Line.draw({
                 canvas,

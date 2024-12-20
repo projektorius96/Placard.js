@@ -2,11 +2,15 @@ import Placard from '../src/index';
 
 export default class {
 
-    static draw({context, COLORS}){
+    static draw({context}){
+
+        const 
+            { COLORS } = Placard.Views.Line.ENUMS
+            ,
+            { ident, reversed_ident } = Placard.Views.Wireframe.ENUMS.TYPE
+            ;
 
         let { canvas } = context;
-        const { ident, reversed_ident } = Placard.Views.Wireframe.ENUMS.TYPE
-
         return ([
             Placard.Views.Wireframe.draw({
                 canvas,
@@ -23,7 +27,7 @@ export default class {
                 }
             })
             ,
-        ])
+        ]);
 
     }
 
