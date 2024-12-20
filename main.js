@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 ,
                 new Placard.ViewGroup.Layer({name: 'wireframe', hidden: true})
                 ,
-                new Placard.ViewGroup.Layer({name: 'right_triangle', hidden: !true})
+                new Placard.ViewGroup.Layer({name: 'right-triangle', hidden: !true})
                 ,
                 new Placard.ViewGroup.Layer({name: 'ring', hidden: true})
                 ,

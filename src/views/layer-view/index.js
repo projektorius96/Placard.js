@@ -13,12 +13,25 @@ customElements.define(layer_view, class extends HTMLCanvasElement {
 
             this.name = name;
             this.id = this.name;
+            this.stack = [];
 
         }
 
     }
 
     connectedCallback(){
+
+        Object.assign(this, {
+
+            addViews(viewsList = []){
+
+                this.stack = [
+                    ...viewsList
+                ]
+
+            }
+
+        })
 
         Object.assign(this.getContext('2d'), {
 
