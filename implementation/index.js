@@ -21,25 +21,36 @@ export default function (stage){
 
                 /* === GRID === */
                 case 'grid' :
-                    Placard.Views.Grid.draw({
-                        canvas: stage.layers.grid, 
-                        options: {
-                            lineWidth: 2,
-                        }}
-                    );
+                    stage.layers.grid.addViews([
+
+                        Placard.Views.Grid.draw({
+                            canvas: stage.layers.grid, 
+                            options: {
+                                lineWidth: 2,
+                            }}
+                        )
+                        ,
+
+                    ])
                 break;
 
                 /* === RIGHT-TRIANGLE === */
-                case stage.layers.right_triangle.name :
+                case 'right-triangle' :
                     // DEV_NOTE # The line below control grouped (i.e. Layer-level) matrix transformation:
                     context.setTransform(...setAngle(0), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
 
-                    RightTriangle.draw({context});
+                    stage.layers[canvas.name].addViews([
+                        RightTriangle.draw({context})
+                        ,
+                    ])
                 break;
                 
                 /* === WIREFRAMES === */
                 case stage.layers.wireframe.name :
-                    Wireframe.draw({context});
+                    stage.layers.wireframe.addViews([
+                        Wireframe.draw({context})
+                        ,
+                    ])
                 break;
 
                 /* === RING === */
@@ -47,7 +58,10 @@ export default function (stage){
                     // DEV_NOTE # The line below control grouped (i.e. Layer-level) matrix transformation:
                     context.setTransform(...setAngle(0), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
                     
-                    Ring.draw({context});
+                    stage.layers.ring.addViews([
+                        Ring.draw({context})
+                        ,
+                    ])
                 break ;
 
             endswitch:;}
