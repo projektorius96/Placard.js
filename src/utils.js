@@ -43,9 +43,9 @@ export function responsify({stage, stageScale}){
         ,
         divisorY = Math.ceil( stage?.clientHeight / GRIDCELL_DIM )
         ,
-        X_IN_MIDDLE = ( ( ( divisorX * GRIDCELL_DIM ) ) / 2 )
+        X_IN_MIDDLE = ( ( divisorX * GRIDCELL_DIM ) / 2 )
         ,  
-        Y_IN_MIDDLE = ( ( ( divisorY * GRIDCELL_DIM )  ) / 2 )
+        Y_IN_MIDDLE = ( ( divisorY * GRIDCELL_DIM  ) / 2 )
     ;
 
     stage.grid = {
