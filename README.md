@@ -14,22 +14,24 @@
 
 > Majority of the time, you will touch only the following files:
 - **`./main.js`** : this is where you write your "implementation" using Placard.js-light as a wrapper
-- **`./user-settings.js`** : this is where you define your "defaults" (i.e. globals) on top of existing ones (_at the time of writing this, only very few are defined, of which perhaps most important to mention, is `responsiveValue` used as multiplicator only in matrix transformations, such as translation (if any), this is to make sure the translation itself is well-responsive with the rest of content draw on viewport of Canvas' environment host_).
+  - **`./implmentation/<name-without-angle-brackets>.js`** : recently added file-system-level modular implementation, where `<name-without-angle-brackets>.js` e.g. `wireframe.js` is _a virtual implementation of `Placard.js-light` as specification (i.e. Canvas API wrapper)_, whose the only goal is to make `./main.js` file containing as few code lines as possible.
+- **`./user-settings.js`** : this is where you define your "defaults" (i.e. globals) on top of existing ones : _at the time of writing this, only very few are defined, of which perhaps most important to mention, is `responsiveValue` used as multiplicator for matrix transformations such as translation (usually this specific value accessed via `context.global.options.responsiveValue` found in Placard specification rather than its implementation, such as `./src/views/line.js`, thus it is abstracted away) – the only goal it has, is to make sure translation itself is well-responsive with the rest of content drawn on canvas_.
 
-Once you have examined the files, open the **`./main.js`** where you will find `switch` statement in the source code, whereas each `case` of such `switch` statement is striving to match against `canvas.name` evaluated in run-time: the `canvas.name` itself is given during Canvas (hereinafter – Layer) registration, currently the source code contains two Layers registered, i.e.:
+Okay, once you have examined the files, open the **`./main.js`** where you will find `switch` statement in the source code, whereas each `case` of such `switch` statement is striving to match against `canvas.name` evaluated in run-time : the `canvas.name` itself is given during Canvas (hereinafter – "Layer") registration, currently the source code contains two Layers registered, as follows:
 
 ```js
 const stage = new Placard.ViewGroup.Stage({});
-stage.add([
-    new Placard.ViewGroup.Layer({name: 'grid', /* hidden: true */}) /* that's a grid in the background */
-    ,
-    new Placard.ViewGroup.Layer({name: 'diagonals'}) /* the diagonals is just a simple proof-of-case view (shape) that is drawn on top of existing grid (unless hidden set to true for grid's Layer) */
-    ,
-    new Placard.ViewGroup.Layer({name: 'your-implementation'}) /* here is we adding another Layer, whose name := 'your-implementation' */
-]);
+    stage.add([
+        new Placard.ViewGroup.Layer({name: 'grid', opacity: 0.25, hidden: !true})
+        ,
+        new Placard.ViewGroup.Layer({name: 'your-implementation', opacity: 0.25, hidden: !true})
+        ,
+    ]);
 ```
 
-Now as we registered the the Layer with `name := 'your-implementation'`, we have to match against it within **switch** statement (control flow), whereas the following `case` could look like the following:
+Now as we registered the Layer with `name := 'your-implementation'`, we have to match against it within **switch** statement, where the following `case` would look like the following:
+
+> **NOTE** : each `case`'s order MAY NOT match the `stage.add`'s list order, consider switch statement as follows:..
 
 ```js
 // ...
@@ -37,7 +39,16 @@ switch(canvas.name) {
 
     case 'your-implementation':
         // All `context` manipulations goes here: please refer ./main.js for examples
-    break; 
+    break;
+    
+    case 'grid' :
+        Placard.Views.Grid.draw({
+            canvas: stage.layers.grid, 
+            options: {
+                lineWidth: 2,
+            }}
+        );
+    break;
 
 }
 // ...
