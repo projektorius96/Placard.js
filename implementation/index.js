@@ -10,7 +10,7 @@ export default function (stage){
     const { setAngle } = Placard.Helpers.Trigonometry;
 
     Placard
-    .init({stage, stageScale: 25 /* <=== # thumb of rule is between 15-20 (in relative units) */})
+    .init({stage, stageScale: 20 /* <=== # thumb of rule is between 15-20 (in relative units) */})
     .on((context)=>{
 
         if ( UserSettings.init({context}) ) {
@@ -37,7 +37,7 @@ export default function (stage){
                 /* === RIGHT-TRIANGLE === */
                 case 'right-triangle' :
                     // DEV_NOTE # The line below control grouped (i.e. Layer-level) matrix transformation:
-                    context.setTransform(...setAngle(0), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
+                    context.setTransform(...setAngle(-45), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
 
                     stage.layers[canvas.name].addViews([
                         RightTriangle.draw({context})

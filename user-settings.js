@@ -5,7 +5,11 @@ import Placard from './src/index';
  */
 export default class {
 
+    static #snapToGrid = Math.sin(Math.PI/4);
+
     static init({context}){
+
+        context.snapToGrid = this.#snapToGrid;
 
         Object.assign(context, {
             global: {
