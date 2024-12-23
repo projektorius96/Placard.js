@@ -37,7 +37,7 @@ export default function (stage){
                 /* === RIGHT-TRIANGLE === */
                 case 'right-triangle' :
                     // DEV_NOTE # The line below control grouped (i.e. Layer-level) matrix transformation:
-                    context.setTransform(...setAngle(-45), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
+                    context.setTransform(...setAngle(-135), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
 
                     stage.layers[canvas.name].addViews([
                         RightTriangle.draw({context})
