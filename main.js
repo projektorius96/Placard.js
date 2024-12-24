@@ -17,8 +17,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 ,
                 new Placard.ViewGroup.Layer({name: 'right-triangle', hidden: !true})
                 ,
-                new Placard.ViewGroup.Layer({name: 'ring', hidden: true})
-                ,
+                /* new Placard.ViewGroup.Layer({name: 'ring', hidden: true})
+                , *//* <=== DEV_NOTE (!) # if this is instantiated, session-level (tab) console.log may halt the CPU, due to anti-aliasing part in `setRange(0, 0.1 , 720, false)`, thus commenting it out for now... */
             ]);
         
             if ( setViews(stage) ) {

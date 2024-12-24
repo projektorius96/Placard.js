@@ -11,6 +11,7 @@ export default class {
         ,
         KIND: {
             line(){},
+            vector(){},
             ring(){},
         }
     }
@@ -42,6 +43,7 @@ export default class {
             }
             if (options.overrides.transform?.angle){
                 context.rotate(options.overrides.transform.angle)
+                context.currentAngle = options.overrides.transform.angle;
             }
             if (options.overrides.transform?.scale){
                 let { x, y } = options.overrides.transform.scale;
@@ -64,7 +66,7 @@ export default class {
                                 ( context.global.options.responsiveValue * ( point[1] ) ) - (options.lineWidth ||  context.global.options.lineWidth)
                             );
                             break;
-                        default /* === 'circle' */:
+                        default /* === ('circle' || 'line') */ :
                             context.moveTo(
                                 0
                                 , 
@@ -84,13 +86,78 @@ export default class {
                     
         context.closePath();
 
-        context.kind = options.kind || 'line';
         context.lineWidth = options.lineWidth || context.global.options.lineWidth;
         context.strokeStyle = options.strokeStyle || context.global.options.strokeStyle;
         context.fillStyle = options.fillStyle || context.global.options.fillStyle;
         context.fillStroke();
+
+        context.restore();
+
+        if (options.kind === this.ENUMS.KIND.vector.value) {
+
+            options.points.forEach((point)=>{
+                this.#addArrowTip({
+                    context,
+                    options,
+                    x2: (point[0]) * context.global.options.responsiveValue,
+                    y2: (point[1]) * context.global.options.responsiveValue,
+                    arrowTip: (options?.arrowTip || {baseLength : (context.global.options.lineWidth * 5), capLength : 0, width : (context.global.options.lineWidth * 5)})
+                });
+            });
+
+        }
+
+        return true;
+
+    }
+
+    /**
+     * > **NOTE** : Kudos to ChatGPT for this algorithm using `Math.atan2` !
+     * 
+     * ---
+     * 
+     * Draws a line with an arrowhead at the end of the line segment.
+     * @param {number} x2 - Ending x-coordinate of the line
+     * @param {number} y2 - Ending y-coordinate of the line
+     * @param {number} [x1] - Starting x-coordinate of the line
+     * @param {number} [y1] - Starting y-coordinate of the line
+     * @param {number} [baseLength] - Base length of the arrowhead
+     * @param {number} [capLength] - Cap length of the arrowhead
+     * @param {number} [width] - Width of the arrowhead (distance between its two "wings")
+     */
+    static #addArrowTip({context, options, x2, y2, x1 = 0, y1 = 0, arrowTip}){
+
+        context.save();
+
+        let { x: offsetX, y: offsetY } = (options.overrides?.transform?.translation || {x: 0, y: 0});
+        let angleXY = (options.overrides?.transform?.angle || 0);
+            context.translate(offsetX * context.global.options.responsiveValue, offsetY * context.global.options.responsiveValue)
+            context.rotate(angleXY)
+
+            // Calculate the angle of the line
+            const angle = Math.atan2(y2 - y1, x2 - x1);
         
-        context.restore()
+            // Arrowhead points
+            const arrowAngle1 = angle + Math.atan(arrowTip.width / (2 * arrowTip.baseLength)); // First wing
+            const arrowAngle2 = angle - Math.atan(arrowTip.width / (2 * arrowTip.baseLength)); // Second wing
+        
+            const arrowX1 = x2 - arrowTip.baseLength * Math.cos(arrowAngle1);
+            const arrowY1 = y2 - arrowTip.baseLength * Math.sin(arrowAngle1);
+            const arrowX2 = x2 - arrowTip.baseLength * Math.cos(arrowAngle2);
+            const arrowY2 = y2 - arrowTip.baseLength * Math.sin(arrowAngle2);
+            
+            // Draw the arrowhead
+            context.beginPath();
+            context.moveTo(x2 + arrowTip.capLength, y2 + arrowTip.capLength);
+            context.lineTo(arrowX1, arrowY1);
+            context.lineTo(arrowX2, arrowY2);
+            context.closePath();
+
+            context.strokeStyle = options.strokeStyle;
+            context.fillStyle = options.fillStyle || context.strokeStyle;
+            context.fillStroke();
+
+        context.restore();
 
         return true;
 
