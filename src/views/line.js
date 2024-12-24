@@ -25,17 +25,17 @@ export default class {
 
     /**
      * The `default.draw` static method takes single `Object` as its input whose properties are as follows:
-     * @param {HTMLCanvasElement} canvas - a reference to `canvas` (a.k.a. Layer) instance, whose context in turn is being modified;
-     * @param {Object} options - options you have passed to shape current `context` of the `canvas`
-     * @returns {Object} The `options`
-     */
+     * @param {HTMLCanvasElement} canvas - a reference to `canvas` (_a.k.a. Layer_) instance whose context in turn will be modified;
+     * @param {Object} options - options you have passed to shape's current `context` of the `canvas`
+     * @returns {Boolean} `true`
+    */
     static draw({canvas, options}) {
 
         const context = canvas.getContext('2d');
 
         context.save()
 
-        // DEV_NOTE # local (per-View) matrix transformation(s); this MUST go after per-Layer (shared) matrix transformation, if any !
+        // DEV_NOTE # The following are "local" (a.k.a. per-View) matrix transformation(s); this MUST go after per-Layer (i.e. grouped, global – all are synonyms) matrix transformation, if any applied !
         if (options.overrides?.transform){
             if (options.overrides.transform?.translation){
                 let { x, y } = options.overrides.transform.translation;

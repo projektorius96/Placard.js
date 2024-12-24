@@ -36,13 +36,14 @@ export default function (stage){
 
                 /* === RIGHT-TRIANGLE === */
                 case 'right-triangle' :
-                    // DEV_NOTE # The line below control grouped (i.e. Layer-level) matrix transformation:
-                    context.setTransform(...setAngle(-135), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
-
-                    stage.layers[canvas.name].addViews([
-                        RightTriangle.draw({context})
-                        ,
-                    ])
+                    // DEV_NOTE # The line below controls grouped (i.e. Layer-level) matrix transformation:
+                    /* context.setTransform(...setAngle(-45), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE); */// # alternatively we can call `context.transformLayer()` by asking to read transform given during instantiation of ViewGroup.Layer
+                    if ( context.transformLayer() ){
+                        stage.layers[canvas.name].addViews([
+                            RightTriangle.draw({context})
+                            ,
+                        ])
+                    }
                 break;
                 
                 /* === WIREFRAMES === */

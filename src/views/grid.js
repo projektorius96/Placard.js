@@ -1,10 +1,10 @@
 export default class grid {
 
-    /** 
+    /**
      * The `default.draw` static method takes single `Object` as its input whose properties are as follows:
-     * @param {HTMLCanvasElement} canvas - a reference to the `canvas` instance
-     * @param {Object} options - options you have passed to shape current `context` of the `canvas`
-     * @returns {Object} The `options`
+     * @param {HTMLCanvasElement} canvas - a reference to `canvas` (_a.k.a. Layer_) instance whose context in turn will be modified;
+     * @param {Object} options - options you have passed to shape's current `context` of the `canvas`
+     * @returns {Boolean} `true`
     */
     static draw({canvas, options}){
 

@@ -1,7 +1,7 @@
 import setStyling from './index.css.js';
 
 /**
- * > **NOTE** : `stage-view` is top-level web-component of conceptual ViewGroup
+ * > **NOTE** : This `stage` view is top-level ViewGroup web-component
  */
 
 export const stage_view = (new URL(import.meta.url)).pathname.split('/').at(-2);

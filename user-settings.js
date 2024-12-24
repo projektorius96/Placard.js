@@ -14,7 +14,12 @@ export default class {
         Object.assign(context, {
             global: {
                 options: {
-                    responsiveValue: Placard.getResponsiveRatio({context}),
+                    /* 
+                        EXAMPLE : Conventionally we define Placard-specific properties, where each property's key is in "['key'] : value" form, otherwise it's Canvas API reflective key(s) e.g. "strokeStyle: 3"
+                    */
+                    ['ejectXY']: false,
+                    ['startAtQ1']: true,
+                    ['responsiveValue']: Placard.getResponsiveRatio({context}),
                     scalingValue: 3,
                     lineWidth: 4,
                     strokeStyle: 'grey',

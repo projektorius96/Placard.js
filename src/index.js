@@ -59,7 +59,6 @@ export default class {
             setAngle
             ,
             degToRad
-            ,
         }
         ,
     }

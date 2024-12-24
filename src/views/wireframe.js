@@ -11,6 +11,12 @@ export default class {
         Object.freeze(this.ENUMS.TYPE)
     }
 
+    /**
+     * The `default.draw` static method takes single `Object` as its input whose properties are as follows:
+     * @param {HTMLCanvasElement} canvas - a reference to `canvas` (_a.k.a. Layer_) instance whose context in turn will be modified;
+     * @param {Object} options - options you have passed to shape's current `context` of the `canvas`
+     * @returns {Boolean} `true`
+    */
     static draw({canvas, options}){
 
         const context = canvas.getContext('2d');
