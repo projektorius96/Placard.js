@@ -1,6 +1,10 @@
 # Project name: **Placard.js-light**
 
-> _This is the lightweight version of another project called **"Placard.js"** I am actively working on._
+> **NOTE**: _This is the lightweight version of another project called **"Placard.js"** I am actively working on._ <br>
+<br>
+[Interactive demo (PWA-complete build)](https://projektorius96.github.io/Placard.js-site/) <br> 
+<br>
+_P.S. The interactive demo itself depends on in-house experimental GUI, so please no judgement regarding its UX/UI..._
 
 ---
 
@@ -14,6 +18,10 @@ DEV_TIP # ... : tip (a.k.a. advice) left by developer
 
 ```
 
+### Glossary
+
+- PWA – Progressive Web App
+
 ### Motivation
 
 > For the past couple of years from sit-to-sit I was using **Konva.js** as a graphical tool to learn various aspects of Maths and beyond, for that Konva.js is a great choice, consider a [Excel-like UI](https://youtube.com/playlist?list=PL7JUsQnnxGCsfxAjqhqPzBYHxk2o4u2bo&si=F-IaKSHgk79XAXw_), or a basic image editing solution with infinite canvas – [Konva.js showcase](https://konvajs.org/docs/sandbox/index.html), etc._, but then it comes about truly responsive web experience (hereinafter as – "RWX"), sadly it remains behind its competitors (at least RWX-wise), and one of those is **Placard.js**, specifically – "**Placard.js-light**".
@@ -26,7 +34,7 @@ DEV_TIP # ... : tip (a.k.a. advice) left by developer
 - **`./implmentation/index.js`** : this is where you write your "implementation" using Placard.js-light as a wrapper (i.e. "specification"), everything else under _`./implmentation/` path_ such as `./implmentation/right-triangle.js` is just a file-system-based (i.e. modular) abstraction exported and ready to be re-used under the top-level `./implmentation/index.js` path;
 - **`./user-settings.js`** : this is where you define your "defaults" (i.e. globals) on top of existing ones: _at the time of writing this, only very few are defined, of which perhaps most important to mention, is `responsiveValue` used as multiplicator for matrix transformations such as translation (usually this specific value accessed via `context.global.options.responsiveValue` found in Placard.js-light specification rather than its implementation, such as `./src/views/line.js`, thus it is abstracted away) – the only goal it has to fulfil, is to make sure translation itself is well-responsive with the rest of content drawn on canvas_.
 
-Okay, once you have examined the files, open the **`./implementation/index.js`** where you will find `switch` statement in the source code, whose each `case` is striving to match against `canvas.name` evaluated during run-time : the `canvas.name` itself is given during `HTMLCanvasElement` (hereinafter – "Layer") instantiation, for an example:
+Okay, once you have examined the files, open the **`./implementation/index.js`** (otherwise it's **`./main.js`**, especially if we employ GUI of choice) where you will find `switch` statement in the source code, whose each `case` is striving to match against `canvas.name` evaluated during run-time: value of `canvas.name` itself is given during `HTMLCanvasElement` (hereinafter – "Layer") instantiation, for an example:
 
 ```js
 
@@ -78,6 +86,8 @@ switch(canvas.name) {
 ---
 
 ### Building (production)
+
+> To install PWA read – [this](https://web.dev/learn/pwa/installation)
 
 ### GitHub Pages
 
