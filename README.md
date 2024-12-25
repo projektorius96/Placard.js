@@ -1,9 +1,9 @@
 # Project name: **Placard.js-light**
 
 > **NOTE**: _This is the lightweight version of another project called **"Placard.js"** I am actively working on._ <br>
-<br>
-[Interactive demo (PWA-complete build)](https://projektorius96.github.io/Placard.js-site/) <br> 
-<br>
+
+[Interactive demo](https://projektorius96.github.io/Placard.js-site/) <br> 
+
 _P.S. The interactive demo itself depends on in-house experimental GUI, so please no judgement regarding its UX/UI..._
 
 ---
@@ -12,8 +12,8 @@ _P.S. The interactive demo itself depends on in-house experimental GUI, so pleas
 
 ```diff
 
-DEV_NOTE # ... : note left by developer
-DEV_NOTE (!) # ... : IMPORTANT note left by developer
+DEV_NOTE # ... : a note left by developer
+DEV_NOTE (!) # ... : the IMPORTANT note left by developer
 DEV_TIP # ... : tip (a.k.a. advice) left by developer
 
 ```
