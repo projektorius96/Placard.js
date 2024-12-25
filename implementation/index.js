@@ -38,7 +38,7 @@ export default function (stage){
 
                 /* === GRID === */
                 case 'grid' :
-                    stage.layers.grid.addViews([
+                    stage.layers.grid.add([
                         Placard.Views.Grid.draw({
                             canvas: stage.layers.grid, 
                             options: {
@@ -54,7 +54,7 @@ export default function (stage){
                     // DEV_NOTE # The line below controls grouped (i.e. Layer-level) matrix transformation:
                     /* context.setTransform(...setAngle(-45), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE); */// # alternatively we can call `context.transformLayer()` by asking to read transform given during instantiation of ViewGroup.Layer
                     if ( context.transformLayer() ){
-                        stage.layers[canvas.name].addViews([
+                        stage.layers[canvas.name].add([
                             RightTriangle.draw({context})
                             ,
                         ])
@@ -63,7 +63,7 @@ export default function (stage){
                 
                 /* === WIREFRAMES === */
                 case stage.layers.wireframe.name :
-                    stage.layers.wireframe.addViews([
+                    stage.layers.wireframe.add([
                         Wireframe.draw({context})
                         ,
                     ])
@@ -74,7 +74,7 @@ export default function (stage){
                     // DEV_NOTE # The line below control grouped (i.e. Layer-level) matrix transformation:
                     context.setTransform(...setAngle(0), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
                     
-                    stage.layers.ring.addViews([
+                    stage.layers.ring.add([
                         Ring.draw({context})
                         ,
                     ])

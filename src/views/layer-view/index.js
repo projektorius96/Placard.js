@@ -34,7 +34,7 @@ customElements.define(layer_view, class extends HTMLCanvasElement {
 
         Object.assign(canvasLayer, {
 
-            addViews(viewsList = []){
+            add(viewsList = []){
 
                 canvasLayer.stack = [
                     ...viewsList

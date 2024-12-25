@@ -45,7 +45,7 @@ switch(canvas.name) {
 
     case 'your-implementation':
         // DEV_NOTE # In this case [canvas.name] would compute to 'your-implementation' during run-time:
-        stage.layers[canvas.name].addViews([
+        stage.layers[canvas.name].add([
             ///* DEV_TIP # Conventionally it would abstracted away into its own logic under `./implementation/<implementation-name.js>`, for an example `./implementation/right-triangle.js`, otherwise we can simply use `void function` to contain such logic... */
             void function(){
                 /* All manipulations applied onto the current `context` goes here... */
@@ -55,7 +55,7 @@ switch(canvas.name) {
     break;
     
     case 'grid' :
-        stage.layers.grid.addViews([
+        stage.layers.grid.add([
             Placard.Views.Grid.draw({
                 canvas: stage.layers.grid, 
                 options: {
