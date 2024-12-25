@@ -7,9 +7,11 @@
 ### Annotations
 
 ```diff
+
 DEV_NOTE # ... : note left by developer
 DEV_NOTE (!) # ... : IMPORTANT note left by developer
 DEV_TIP # ... : tip (a.k.a. advice) left by developer
+
 ```
 
 ### Motivation
@@ -27,6 +29,7 @@ DEV_TIP # ... : tip (a.k.a. advice) left by developer
 Okay, once you have examined the files, open the **`./implementation/index.js`** where you will find `switch` statement in the source code, whose each `case` is striving to match against `canvas.name` evaluated during run-time : the `canvas.name` itself is given during `HTMLCanvasElement` (hereinafter – "Layer") instantiation, for an example:
 
 ```js
+
 const stage = new Placard.ViewGroup.Stage({});
     stage.add([
         new Placard.ViewGroup.Layer({name: 'grid', opacity: 0.25})
@@ -34,6 +37,7 @@ const stage = new Placard.ViewGroup.Stage({});
         new Placard.ViewGroup.Layer({name: 'your-implementation'})
         ,
     ]);
+
 ```
 
 Now as we registered the Layer with `name := 'your-implementation'`, we have to match against it within **switch** statement, where the following `case` would look like the following:
@@ -47,9 +51,9 @@ switch(canvas.name) {
     case 'your-implementation':
         // DEV_NOTE # In this case [canvas.name] would compute to 'your-implementation' during run-time:
         stage.layers[canvas.name].add([
-            ///* DEV_TIP # Conventionally it would abstracted away into its own logic under `./implementation/<implementation-name.js>`, for an example `./implementation/right-triangle.js`, otherwise we can simply use `void function` to contain such logic... */
+            ///* DEV_TIP # Conventionally it would abstracted away into its own logic under `./implementation/<implementation-name.js>`, for an example `./implementation/right-triangle.js`, otherwise we can simply use `void function` to contain such logic as follows:.. */
             void function(){
-                /* All manipulations applied onto the current `context` goes here... */
+                /* All manipulations applied onto the current `context` goes here between curly braces of this void function... */
             }()
             ,
         ])
