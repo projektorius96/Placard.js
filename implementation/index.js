@@ -23,14 +23,14 @@ export default function (stage){
             ...setAngle(-45), ...origin
         ]})
         ,
-        new Placard.ViewGroup.Layer({name: 'wireframe', hidden: true})
-        ,
+        /* new Placard.ViewGroup.Layer({name: 'wireframe', hidden: true})
+        , */
         /* new Placard.ViewGroup.Layer({name: 'ring', hidden: true})
         , *//* <=== DEV_NOTE (!) # if this is instantiated, session-level (tab) `console.log` may halt the CPU, due to anti-aliasing part in `setRange(0, 0.1 , 720, false)` call, thus commented out */
     ]);
 
     Placard
-    .init({stage, stageScale: 20 /* DEV_NOTE # the thumb of rule is between 15-20 (in relative units) */})
+    .init({stage, stageScale: 20 /* <=== DEV_NOTE # the thumb of rule is between 15-20 (in relative units) */})
     .on((context)=>{
 
         if ( UserSettings.init({context}) ) {
@@ -55,7 +55,7 @@ export default function (stage){
                 break;
                 
                 /* === WIREFRAMES === */
-                case stage.layers.wireframe.name :
+                case stage.layers.wireframe?.name :
 
                     stage.layers.wireframe.add([
                         Wireframe.draw({context})
@@ -65,7 +65,7 @@ export default function (stage){
                 break;
 
                 /* === RING === */
-                case stage.layers.ring.name :
+                case stage.layers.ring?.name :
 
                     // DEV_NOTE # The line below controls grouped (i.e. Layer-level) matrix transformation:
                     context.setTransform(...setAngle(0), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
