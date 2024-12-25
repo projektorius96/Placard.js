@@ -12,6 +12,9 @@ export default function (stage){
         ,
         { setAngle } = Placard.Helpers.Trigonometry;
 
+    // DEV_NOTE (!) # remove all exiting stage.layers (if any), before calling `stage.add` again
+    if (stage.layers.length > 0) stage.replaceChildren() ;
+    
     // EXAMPLE # Here is where you instantiate Canvas "layer(s)" dynamically, rather than declaratively as writing <canvas> within index.html
     stage.add([
         new Placard.ViewGroup.Layer({name: 'grid', opacity: 0.25, hidden: !true})
@@ -85,7 +88,7 @@ export default function (stage){
         endif:;}
         
     endon:;})
-
+    
     return true;
 
 }

@@ -8,6 +8,7 @@
 
 ```diff
 DEV_NOTE # ... : note left by developer
+DEV_NOTE (!) # ... : IMPORTANT note left by developer
 DEV_TIP # ... : tip (a.k.a. advice) left by developer
 ```
 
