@@ -5,6 +5,12 @@ import { start_url } from './manifest.json'/*  with {type: 'json'} */;
 const GITHUB_READY = process.env.GITHUB_READY || 0;
 const outDir = 'site';
 export default defineConfig({
+    resolve: {
+        alias: [
+            {find: "@wc-pane", replacement: "/../wc-pane/src"},
+        ]
+    }
+    ,
     base: './'
     ,
     build: {
