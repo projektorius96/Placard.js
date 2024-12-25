@@ -1,5 +1,5 @@
 const layers = 'layers';
-Object.defineProperties(HTMLElement.prototype, {
+Object.defineProperties(HTMLDivElement.prototype, {
     [layers] : {
         get(){
             return this.children
