@@ -4,6 +4,13 @@
 
 ---
 
+### Annotations
+
+```diff
+DEV_NOTE # ... : note left by developer
+DEV_TIP # ... : tip (a.k.a. advice) left by developer
+```
+
 ### Motivation
 
 > For the past couple of years from sit-to-sit I was using **Konva.js** as a graphical tool to learn various aspects of Maths and beyond, for that Konva.js is a great choice, consider a [Excel-like UI](https://youtube.com/playlist?list=PL7JUsQnnxGCsfxAjqhqPzBYHxk2o4u2bo&si=F-IaKSHgk79XAXw_), or a basic image editing solution with infinite canvas – [Konva.js showcase](https://konvajs.org/docs/sandbox/index.html), etc._, but then it comes about truly responsive web experience (hereinafter as – "RWX"), sadly it remains behind its competitors (at least RWX-wise), and one of those is **Placard.js**, specifically – "**Placard.js-light**".
@@ -13,18 +20,17 @@
 ### How to use
 
 > Majority of the time, you will touch only the following files:
-- **`./main.js`** : this is where you write your "implementation" using Placard.js-light as a wrapper
-  - **`./implmentation/<name-without-angle-brackets>.js`** : recently added file-system-level modular implementation, where `<name-without-angle-brackets>.js` e.g. `wireframe.js` is _a virtual implementation of `Placard.js-light` as specification (i.e. Canvas API wrapper)_, whose the only goal is to make `./main.js` file containing as few code lines as possible.
-- **`./user-settings.js`** : this is where you define your "defaults" (i.e. globals) on top of existing ones : _at the time of writing this, only very few are defined, of which perhaps most important to mention, is `responsiveValue` used as multiplicator for matrix transformations such as translation (usually this specific value accessed via `context.global.options.responsiveValue` found in Placard specification rather than its implementation, such as `./src/views/line.js`, thus it is abstracted away) – the only goal it has, is to make sure translation itself is well-responsive with the rest of content drawn on canvas_.
+- **`./implmentation/index.js`** : this is where you write your "implementation" using Placard.js-light as a wrapper (i.e. "specification"), everything else under _`./implmentation/` path_ such as `./implmentation/right-triangle.js` is just a file-system-based (i.e. modular) abstraction exported and ready to be re-used under the top-level `./implmentation/index.js` path;
+- **`./user-settings.js`** : this is where you define your "defaults" (i.e. globals) on top of existing ones: _at the time of writing this, only very few are defined, of which perhaps most important to mention, is `responsiveValue` used as multiplicator for matrix transformations such as translation (usually this specific value accessed via `context.global.options.responsiveValue` found in Placard.js-light specification rather than its implementation, such as `./src/views/line.js`, thus it is abstracted away) – the only goal it has to fulfil, is to make sure translation itself is well-responsive with the rest of content drawn on canvas_.
 
-Okay, once you have examined the files, open the **`./main.js`** where you will find `switch` statement in the source code, whereas each `case` of such `switch` statement is striving to match against `canvas.name` evaluated in run-time : the `canvas.name` itself is given during Canvas (hereinafter – "Layer") registration, currently the source code contains two Layers registered, as follows:
+Okay, once you have examined the files, open the **`./implementation/index.js`** where you will find `switch` statement in the source code, whose each `case` is striving to match against `canvas.name` evaluated during run-time : the `canvas.name` itself is given during `HTMLCanvasElement` (hereinafter – "Layer") instantiation, for an example:
 
 ```js
 const stage = new Placard.ViewGroup.Stage({});
     stage.add([
-        new Placard.ViewGroup.Layer({name: 'grid', opacity: 0.25, hidden: !true})
+        new Placard.ViewGroup.Layer({name: 'grid', opacity: 0.25})
         ,
-        new Placard.ViewGroup.Layer({name: 'your-implementation', opacity: 0.25, hidden: !true})
+        new Placard.ViewGroup.Layer({name: 'your-implementation'})
         ,
     ]);
 ```
@@ -38,16 +44,26 @@ Now as we registered the Layer with `name := 'your-implementation'`, we have to 
 switch(canvas.name) {
 
     case 'your-implementation':
-        // All `context` manipulations goes here: please refer ./main.js for examples
+        // DEV_NOTE # In this case [canvas.name] would compute to 'your-implementation' during run-time:
+        stage.layers[canvas.name].addViews([
+            ///* DEV_TIP # Conventionally it would abstracted away into its own logic under `./implementation/<implementation-name.js>`, for an example `./implementation/right-triangle.js`, otherwise we can simply use `void function` to contain such logic... */
+            void function(){
+                /* All manipulations applied onto the current `context` goes here... */
+            }()
+            ,
+        ])
     break;
     
     case 'grid' :
-        Placard.Views.Grid.draw({
-            canvas: stage.layers.grid, 
-            options: {
-                lineWidth: 2,
-            }}
-        );
+        stage.layers.grid.addViews([
+            Placard.Views.Grid.draw({
+                canvas: stage.layers.grid, 
+                options: {
+                    lineWidth: 2,
+                }}
+            )
+            ,
+        ])
     break;
 
 }

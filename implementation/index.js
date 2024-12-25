@@ -7,7 +7,24 @@ import UserSettings from '../user-settings';
 
 export default function (stage){
 
-    const { setAngle } = Placard.Helpers.Trigonometry;
+    const 
+        origin = [0, 0]
+        ,
+        { setAngle } = Placard.Helpers.Trigonometry;
+
+    // EXAMPLE # Here is where you instantiate Canvas "layer(s)" dynamically, rather than declaratively as writing <canvas> within index.html
+    stage.add([
+        new Placard.ViewGroup.Layer({name: 'grid', opacity: 0.25, hidden: !true})
+        ,
+        new Placard.ViewGroup.Layer({name: 'right-triangle', transform: [
+            ...setAngle(-45), ...origin
+        ]})
+        ,
+        new Placard.ViewGroup.Layer({name: 'wireframe', hidden: true})
+        ,
+        /* new Placard.ViewGroup.Layer({name: 'ring', hidden: true})
+        , *//* <=== DEV_NOTE (!) # if this is instantiated, session-level (tab) console.log may halt the CPU, due to anti-aliasing part in `setRange(0, 0.1 , 720, false)`, thus commenting it out for now... */
+    ]);
 
     Placard
     .init({stage, stageScale: 20 /* <=== # thumb of rule is between 15-20 (in relative units) */})
@@ -22,7 +39,6 @@ export default function (stage){
                 /* === GRID === */
                 case 'grid' :
                     stage.layers.grid.addViews([
-
                         Placard.Views.Grid.draw({
                             canvas: stage.layers.grid, 
                             options: {
@@ -30,7 +46,6 @@ export default function (stage){
                             }}
                         )
                         ,
-
                     ])
                 break;
 
