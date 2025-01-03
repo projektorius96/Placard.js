@@ -4,11 +4,21 @@ import RightTriangle from './right-triangle';
 
 export default function ({stage, Placard, UserSettings}){
 
+    const CONDITIONS = {
+        isMobile : screen.orientation.type.includes('portrait')
+    }
+
     Placard
     .init({stage, stageScale: 20 /* <=== DEV_NOTE # the thumb of rule is between 15-20 (in relative units) */})
     .on((context)=>{
         
         if ( UserSettings.init({context}) ) {
+
+            // DEV_NOTE # scale twice as big, if mobile device is detected :
+            CONDITIONS.isMobile ? context.global.options.scalingValue *= 2 : screen.orientation.type.includes('portrait') * 1 ;
+
+            console.log(context.global.options.scalingValue);
+            
 
             let canvas = context.canvas;
             
