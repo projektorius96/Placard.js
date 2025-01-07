@@ -57,38 +57,21 @@ export default function setView({stage, Placard, UserSettings}){
 
                     stage.layers.grid.add([
                         void function () {
-                            
                             context.setTransform(...setAngle(0), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
 
                             context.beginPath();
-                            context.arc(0, 0, context.global.options.scalingValue * stage.grid.GRIDCELL_DIM/*  * Placard.Views.Line.RIGHTANGLE_SLOPE */, 0, 2 * Math.PI);
+                            context.arc(
+                                /* x */ 0, 
+                                /* y */ 0, 
+                                /* radius */ (context.global.options.scalingValue * stage.grid.GRIDCELL_DIM * Placard.Views.Line.RIGHTANGLE_SLOPE) * context.global.options.responsiveValue, 
+                                /* startAngle */ 0, 
+                                /* endAngle */ 2 * Math.PI,
+                                /* anticlockwise */ true
+                            );
                             context.lineWidth = context.global.options.lineWidth;
                             context.stroke();
-                            
                         }()
-                        // ,
-                        // void function () {
-                            
-                        //     context.setTransform(...setAngle(0), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
-
-                        //     context.beginPath();
-                        //     context.arc(0, 0, context.global.options.scalingValue * stage.grid.GRIDCELL_DIM/*  * Placard.Views.Line.RIGHTANGLE_SLOPE */, 0, 2 * Math.PI);
-                        //     context.lineWidth = context.global.options.lineWidth;
-                        //     context.stroke();
-                            
-                        // }()
-                        // ,
-                        // void function () {
-                            
-                        //     context.setTransform(...setAngle(0), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
-
-                        //     context.beginPath();
-                        //     context.arc(0, 0, context.global.options.scalingValue * stage.grid.GRIDCELL_DIM / Placard.Views.Line.RIGHTANGLE_SLOPE, 0, 2 * Math.PI);
-                        //     context.lineWidth = context.global.options.lineWidth;
-                        //     context.stroke();
-                            
-                        // }()
-                        // ,
+                        ,
                     ]);
 
                 break;
