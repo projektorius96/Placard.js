@@ -14,8 +14,6 @@ export function Notifier(prop, oldProp, newProp) {
 
 export default function setView({stage, Placard, UserSettings}){
 
-    console.log(arguments);
-
     const 
         CONDITIONS = {
             isMobile : screen.orientation.type.includes('portrait')
