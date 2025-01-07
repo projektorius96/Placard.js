@@ -36,9 +36,10 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 new Placard.ViewGroup.Layer({ name: 'grid', opacity: 0.25, hidden: !true })
                 ,
                 new Placard.ViewGroup.Layer({
-                name: 'right-triangle', transform: [
-                ...setAngle( 0 /* current.angle */ ), ...origin
-                ]
+                    name: 'right-triangle', 
+                    transform: [
+                    ...setAngle( 0 ), ...origin
+                    ]
                 })
                 ,
                 new Placard.ViewGroup.Layer({name: 'wireframe', hidden: true})
@@ -59,7 +60,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 .on('input', (e)=>{
         
                     const [ANTI_CLOCKWISE, CLOCKWISE] = [-1, 1];
-                    const current = {angle: /* ANTI_ */CLOCKWISE * Math.floor(e.target.value)};
+                    const current = {angle: ANTI_CLOCKWISE * Math.floor(e.target.value)};
 
                     document.querySelector(`${observerNamespace}`).angle = current.angle;
         
