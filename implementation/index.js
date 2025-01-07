@@ -2,11 +2,27 @@ import Ring from './ring';
 import Wireframe from './wireframe';
 import RightTriangle from './right-triangle';
 
-export default function ({stage, Placard, UserSettings}){
+export function Notifier(prop, oldProp, newProp) {
 
-    const CONDITIONS = {
-        isMobile : screen.orientation.type.includes('portrait')
+    switch (prop) {
+        case 'angle' : 
+            oldProp = newProp;
+        break;
     }
+
+}
+
+export default function setView({stage, Placard, UserSettings}){
+
+    console.log(arguments);
+
+    const 
+        CONDITIONS = {
+            isMobile : screen.orientation.type.includes('portrait')
+        }
+        ,
+        { setAngle, degToRad } = Placard.Helpers.Trigonometry
+        ;
 
     Placard
     .init({stage, stageScale: 20 /* <=== DEV_NOTE # the thumb of rule is between 15-20 (in relative units) */})
@@ -16,9 +32,6 @@ export default function ({stage, Placard, UserSettings}){
 
             // DEV_NOTE # scale twice as big, if mobile device is detected :
             CONDITIONS.isMobile ? context.global.options.scalingValue *= 2 : screen.orientation.type.includes('portrait') * 1 ;
-
-            console.log(context.global.options.scalingValue);
-            
 
             let canvas = context.canvas;
             
@@ -35,6 +48,49 @@ export default function ({stage, Placard, UserSettings}){
                             }}
                         )
                         ,
+                    ]);
+
+                break;
+
+                /* === UNIT-OF-CIRCLE === */
+                case 'unit-of-circle' :
+
+                context.clearRect(0, 0, canvas.width, canvas.height)
+
+                    stage.layers.grid.add([
+                        void function () {
+                            
+                            context.setTransform(...setAngle(0), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
+
+                            context.beginPath();
+                            context.arc(0, 0, context.global.options.scalingValue * stage.grid.GRIDCELL_DIM/*  * Placard.Views.Line.RIGHTANGLE_SLOPE */, 0, 2 * Math.PI);
+                            context.lineWidth = context.global.options.lineWidth;
+                            context.stroke();
+                            
+                        }()
+                        // ,
+                        // void function () {
+                            
+                        //     context.setTransform(...setAngle(0), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
+
+                        //     context.beginPath();
+                        //     context.arc(0, 0, context.global.options.scalingValue * stage.grid.GRIDCELL_DIM/*  * Placard.Views.Line.RIGHTANGLE_SLOPE */, 0, 2 * Math.PI);
+                        //     context.lineWidth = context.global.options.lineWidth;
+                        //     context.stroke();
+                            
+                        // }()
+                        // ,
+                        // void function () {
+                            
+                        //     context.setTransform(...setAngle(0), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
+
+                        //     context.beginPath();
+                        //     context.arc(0, 0, context.global.options.scalingValue * stage.grid.GRIDCELL_DIM / Placard.Views.Line.RIGHTANGLE_SLOPE, 0, 2 * Math.PI);
+                        //     context.lineWidth = context.global.options.lineWidth;
+                        //     context.stroke();
+                            
+                        // }()
+                        // ,
                     ]);
 
                 break;
@@ -65,9 +121,12 @@ export default function ({stage, Placard, UserSettings}){
                 /* === RIGHT-TRIANGLE === */
                 case 'right-triangle' :
 
-                    /* context.setTransform(...setAngle(-45), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE); */
+                    context.clearRect(-stage.grid.X_IN_MIDDLE, -stage.grid.Y_IN_MIDDLE, canvas.width, canvas.height);
+                    context.resetTransform();
+                    
                     // DEV_NOTE # alternatively we can call `context.transformLayer()` by asking to read `transform` from `ViewGroup.Layer({ transform: numbers[] })` itself:
                     if ( context.transformLayer() ){
+                        context.rotate( degToRad( Number( document.querySelector('slider-input').angle) ) )
                         stage.layers[canvas.name].add([
                             RightTriangle.draw({context})
                             ,
