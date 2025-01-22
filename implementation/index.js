@@ -23,7 +23,7 @@ export default function setView({stage, Placard, UserSettings}){
         ;
 
     Placard
-    .init({stage, stageScale: 20 /* <=== DEV_NOTE # the thumb of rule is between 15-20 (in relative units) */})
+    .init({stage})
     .on((context)=>{
         
         if ( UserSettings.init({context}) ) {

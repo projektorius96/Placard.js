@@ -9,10 +9,10 @@ document.addEventListener('DOMContentLoaded', ()=>{
     ///* # (@1.2) */
     document.title = package_json.name;
 
-    let observerNamespace = 'slider-input';
+    const slider_input = 'slider-input';
     document.body.appendChild(
         Observer(
-            observerNamespace
+            slider_input
             ,
             new Map([
                 ['angle', 0],
@@ -25,28 +25,30 @@ document.addEventListener('DOMContentLoaded', ()=>{
     )
 
     const 
-        origin = [0, 0]
+        { Stage, Layer } = Placard.ViewGroup
         ,
-        { setAngle } = Placard.Helpers.Trigonometry;
+        { Trigonometry } = Placard.Helpers
 
-    const stage = new Placard.ViewGroup.Stage({/* container: document.body */});
+    const stage = new Stage({scale: 30});
         if (stage) {
             // DEV_NOTE # herein we add "Layer(s)" to the current "Stage", accessible via `stage.layers` alias:
             stage.add([
-                new Placard.ViewGroup.Layer({ name: 'grid', opacity: 0.25, hidden: !true })
+                new Layer({ name: 'grid', opacity: 0.25, hidden: !true })
                 ,
-                new Placard.ViewGroup.Layer({
+                new Layer({
                     name: 'right-triangle', 
                     transform: [
-                    ...setAngle( 0 ), ...origin
+                        ...Trigonometry.setAngle( 0 )
+                        , 
+                        ...[0, 0]
                     ]
                 })
                 ,
-                new Placard.ViewGroup.Layer({name: 'wireframe', hidden: true})
+                new Layer({name: 'wireframe', hidden: true})
                 ,
-                /* new Placard.ViewGroup.Layer({name: 'ring', hidden: true})
+                /* new Layer({name: 'ring', hidden: true})
                 , *//* <=== DEV_NOTE (!) # if this is instantiated, session-level (tab) `console.log` may halt the CPU, due to anti-aliasing part in `setRange(0, 0.1 , 720, false)` call, thus commented out */
-                new Placard.ViewGroup.Layer({ name: 'unit-of-circle' })
+                new Layer({ name: 'unit-of-circle' })
                 ,
             ]);
         }
@@ -62,7 +64,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
                     const [ANTI_CLOCKWISE, CLOCKWISE] = [-1, 1];
                     const current = {angle: ANTI_CLOCKWISE * Math.floor(e.target.value)};
 
-                    document.querySelector(`${observerNamespace}`).angle = current.angle;
+                    document.querySelector(`${slider_input}`).angle = current.angle;
         
                     // DEV_NOTE (!) # Placard.js reponsive web experience internally based on window.onresize, so we MUST dispatch the following: 
                     window.dispatchEvent(new Event('resize'));
@@ -76,6 +78,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
     /* === GUI === */
     
+    // DEV_NOTE (!) # crucial line that registers "onresize" Event - without this, window resize would not be detected
     if ( setViews({stage, Placard, UserSettings}) ) window.addEventListener('resize', setViews.bind(null, {stage, Placard, UserSettings})) ;
 
 });

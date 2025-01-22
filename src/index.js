@@ -1,10 +1,10 @@
-import { getIterable, responsify } from "./utils";
-import { degToRad, setAngle, setRange } from "./trigonometry";
-import { stage_view } from './views/stage-view';
-import { layer_view } from './views/layer-view';
 import Grid from "./views/grid";
 import Line from "./views/line";
 import Wireframe from "./views/wireframe";
+import { stage_view } from './views/stage-view';
+import { layer_view } from './views/layer-view';
+import { getIterable } from "./utils";
+import { degToRad, setAngle, setRange } from "./trigonometry";
 
 /**
  * @typedef {Array} Iterable
@@ -29,9 +29,9 @@ export default class {
         return responsiveValue;
     }
 
-    static init({stage, stageScale}) {
+    static init({ stage }) {
 
-        if ( responsify({ stage, stageScale }) ) {
+        if ( responsify({ stage }) ) {
             return (
                 getIterable(stage.layers).map( canvas => canvas = canvas.getContext('2d') )
             );
@@ -62,5 +62,57 @@ export default class {
         }
         ,
     }
+
+}
+
+/**
+ * @param {HTMLDivElement} stage - canvas wrapping element (**"view-group"**), if such "`view-group`" is a top-level `view-group`, by convention we will call it the **"`stage`"**
+ * @returns responsify the "stage" and its nested HTMLCanvasElement(s) a.k.a. "Layers", if any
+ */
+function responsify({stage}){
+
+    /** 
+        * > This function expresson is a guard against end-user or developer, who know very little about canonical `Canvas API`
+        * @param {Number} num - odd number that is made even, or even number that is left out as is, i.e. even
+        * @returns makes sure the `GRIDCELL_DIM_RATIO` is always even, this makes sure shapes (views) are well centred in grid-first coordinate system
+    */
+    const evenNumber = (num = 0) => {
+        const rounded = Math.ceil(num);
+        return (
+            ( (rounded % 2) === 1 ) ? (rounded + 1) : (rounded)
+        );
+    }
+
+    let
+        GRIDCELL_DIM = ( stage.clientWidth / evenNumber( stage.scale ) )
+        ,
+        divisorX = Math.ceil( stage?.clientWidth / GRIDCELL_DIM )
+        ,
+        divisorY = Math.ceil( stage?.clientHeight / GRIDCELL_DIM )
+        ,
+        X_IN_MIDDLE = ( ( divisorX * GRIDCELL_DIM ) / 2 )
+        ,  
+        Y_IN_MIDDLE = ( ( divisorY * GRIDCELL_DIM  ) / 2 )
+    ;
+
+    stage.grid = {
+        GRIDCELL_DIM,
+        X_IN_MIDDLE: X_IN_MIDDLE * window.devicePixelRatio, 
+        Y_IN_MIDDLE: Y_IN_MIDDLE * window.devicePixelRatio,
+    }
+    
+    const muttable = {
+        stageWidth: stage?.clientWidth * window.devicePixelRatio,
+        stageHeight: stage?.clientHeight * window.devicePixelRatio,
+    }
+
+    if (stage.children.length > 0){
+        Array.from( stage.children ).forEach((layer)=>{ 
+            layer.width = muttable.stageWidth;
+            layer.height = muttable.stageHeight;
+        });
+    }
+
+    return true;
 
 }
