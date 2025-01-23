@@ -38,11 +38,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 ,
                 /* new Layer({name: 'ring', hidden: true})
                 , *//* <=== DEV_NOTE (!) # if this is instantiated, session-level (tab) `console.log` may halt the CPU, due to anti-aliasing part in `setRange(0, 0.1 , 720, false)` call, thus commented out */
-                new Layer({ name: 'unit-of-circle' })
-                ,
-                new Layer({ name: 'right-triangle' })
-                ,
-                new Layer({ name: 'arc' })
+                new Layer({ name: 'sector' })
                 ,
             ]);
         }

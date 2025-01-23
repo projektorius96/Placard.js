@@ -35,8 +35,8 @@ export default function setView({stage, Placard, UserSettings}){
             
             switch (canvas.name) {
 
-                /* === RIGHT-TRIANGLE === */
-                case 'right-triangle' :
+                /* === SECTOR === */
+                case 'sector' :
                 
                     context.setTransform(...setAngle(-45), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
                     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -46,9 +46,8 @@ export default function setView({stage, Placard, UserSettings}){
                         RightTriangle.draw({context})
                         ,
                         void function(){
-                            context.setTransform(...setAngle(0), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
-                            context.rotate( degToRad( Number( document.querySelector('slider-input').angle ) ) )
 
+                            context.rotate(degToRad(45))
                             context.beginPath();
                             context.arc(
                                 /* x */ 0, 
@@ -60,23 +59,14 @@ export default function setView({stage, Placard, UserSettings}){
                             );
                             context.lineWidth = context.global.options.lineWidth;
                             context.strokeStyle = 'black';
+                            /* context.globalCompositeOperation = 'source-over'; */// @DEFAULT
                             context.stroke();
+
                         }()
-                    ]);
-                
-                break;
+                        ,
+                        void function(){
 
-                /* === UNIT-OF-CIRCLE === */
-                case 'unit-of-circle' :
-
-                context.clearRect(0, 0, canvas.width, canvas.height)
-                context.resetTransform()
-
-                    stage.layers.grid.add([
-                        void function () {
-                            context.setTransform(...setAngle(0), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
-                            context.rotate( degToRad( Number( document.querySelector('slider-input').angle ) ) )
-
+                            context.rotate(degToRad(45))
                             context.beginPath();
                             context.arc(
                                 /* x */ 0, 
@@ -88,13 +78,15 @@ export default function setView({stage, Placard, UserSettings}){
                             );
                             context.lineWidth = context.global.options.lineWidth;
                             context.strokeStyle = 'blue';
+                            context.globalCompositeOperation = 'destination-over';
                             context.stroke();
+
                         }()
                         ,
                     ]);
-
-                break;
                 
+                break;
+
                 /* === WIREFRAMES === */
                 case stage.layers.wireframe?.name :
 
