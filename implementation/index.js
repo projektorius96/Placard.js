@@ -35,6 +35,89 @@ export default function setView({stage, Placard, UserSettings}){
             
             switch (canvas.name) {
 
+                // /* === RIGHT-TRIANGLE === */
+                // /* # [FAILING]@{'Does not snap to initial `stage.grid.GRIDCELL_DIM` during `onresize` event'} */
+                // case 'right-triangle' :
+                //
+                //     // DEV_NOTE # alternatively we can call `context.transformLayer()` by asking to read `transform` from `ViewGroup.Layer({ transform: numbers[] })`:
+                //     if ( context.transformLayer() ){
+                //         context.clearRect(-stage.grid.X_IN_MIDDLE, -stage.grid.Y_IN_MIDDLE, canvas.width, canvas.height);
+                //         context.rotate( degToRad( Number( document.querySelector('slider-input').angle ) ) )
+                //         stage.layers[canvas.name].add([
+                //             RightTriangle.draw({context})
+                //             ,
+                //         ]);
+                //     }
+                //
+                // break;
+
+                case 'right-triangle-v2' :
+                
+                const 
+                    RIGHTANGLE_SLOPE = (1 / Math.sin(Math.PI / 4))
+                    ,
+                    GRIDCELL_DIM = stage.grid.GRIDCELL_DIM * devicePixelRatio
+                    ;
+                
+                const bulkTransform = ({context}) => {
+                        context.resetTransform();
+                        context.translate(stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
+                        context.rotate( degToRad( Number( document.querySelector('slider-input').angle ) ) );
+
+                        return true;
+                }
+                stage.layers[canvas.name].add([
+                        void function red_vector(){
+                            if( bulkTransform({context}) ) {
+                                context.beginPath();
+                                    context.moveTo(0, 0);
+                                    context.lineTo(
+                                        context.global.options.scalingValue * stage.grid.GRIDCELL_DIM * Math.cos(0) * devicePixelRatio
+                                        , 
+                                        context.global.options.scalingValue * stage.grid.GRIDCELL_DIM * Math.sin(0) * devicePixelRatio
+                                    );
+                                    context.lineWidth = context.global.options.lineWidth
+                                    context.strokeStyle = 'red';
+                                context.stroke();
+                            }
+                        }()
+                        ,
+                        void function blue_vector(){
+                            if ( bulkTransform({context}) ) {
+                                context.translate(context.global.options.scalingValue * stage.grid.GRIDCELL_DIM * devicePixelRatio, 0)
+                                context.beginPath();
+                                    context.moveTo(0, 0);
+                                    context.lineTo(
+                                        context.global.options.scalingValue * stage.grid.GRIDCELL_DIM * Math.cos(Math.PI/2) * devicePixelRatio
+                                        , 
+                                        context.global.options.scalingValue * stage.grid.GRIDCELL_DIM * Math.sin(Math.PI/2) * devicePixelRatio
+                                    );
+                                    context.lineWidth = context.global.options.lineWidth;
+                                    context.strokeStyle = 'blue';
+                                context.stroke();
+                            }
+                        }()
+                        ,
+                        void function green_vector(){
+                            if ( bulkTransform({context}) ) {
+                                context.beginPath();
+                                    context.moveTo(0, 0);
+                                    context.lineTo(
+                                        context.global.options.scalingValue * GRIDCELL_DIM * RIGHTANGLE_SLOPE * Math.cos(Math.PI/4)
+                                        , 
+                                        context.global.options.scalingValue * GRIDCELL_DIM * RIGHTANGLE_SLOPE * Math.sin(Math.PI/4)
+                                    );
+                                    context.lineWidth = context.global.options.lineWidth;
+                                    context.strokeStyle = 'green';
+                                context.stroke();
+                            }
+                            
+                        }()
+                        , 
+                    ]);
+                
+                break;
+
                 /* === GRID === */
                 case 'grid' :
 
@@ -50,31 +133,32 @@ export default function setView({stage, Placard, UserSettings}){
 
                 break;
 
-                /* === UNIT-OF-CIRCLE === */
-                case 'unit-of-circle' :
+                // /* === UNIT-OF-CIRCLE === */
+                // case 'unit-of-circle' :
 
-                context.clearRect(0, 0, canvas.width, canvas.height)
+                // context.clearRect(0, 0, canvas.width, canvas.height)
+                // context.resetTransform()
 
-                    stage.layers.grid.add([
-                        void function () {
-                            context.setTransform(...setAngle(0), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
+                //     stage.layers.grid.add([
+                //         void function () {
+                //             context.setTransform(...setAngle(0), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
 
-                            context.beginPath();
-                            context.arc(
-                                /* x */ 0, 
-                                /* y */ 0, 
-                                /* radius */ (context.global.options.scalingValue * stage.grid.GRIDCELL_DIM * Placard.Views.Line.RIGHTANGLE_SLOPE) * context.global.options.responsiveValue, 
-                                /* startAngle */ 0, 
-                                /* endAngle */ 2 * Math.PI,
-                                /* anticlockwise */ true
-                            );
-                            context.lineWidth = context.global.options.lineWidth;
-                            context.stroke();
-                        }()
-                        ,
-                    ]);
+                //             context.beginPath();
+                //             context.arc(
+                //                 /* x */ 0, 
+                //                 /* y */ 0, 
+                //                 /* radius */ (context.global.options.scalingValue * stage.grid.GRIDCELL_DIM * Placard.Views.Line.RIGHTANGLE_SLOPE)/*  * context.snapToGrid * context.global.options.responsiveValue */, 
+                //                 /* startAngle */ 0, 
+                //                 /* endAngle */ 2 * Math.PI,
+                //                 /* anticlockwise */ true
+                //             );
+                //             context.lineWidth = context.global.options.lineWidth;
+                //             context.stroke();
+                //         }()
+                //         ,
+                //     ]);
 
-                break;
+                // break;
                 
                 /* === WIREFRAMES === */
                 case stage.layers.wireframe?.name :
@@ -98,23 +182,6 @@ export default function setView({stage, Placard, UserSettings}){
                     ]);
 
                 break ;
-
-                /* === RIGHT-TRIANGLE === */
-                case 'right-triangle' :
-
-                    context.clearRect(-stage.grid.X_IN_MIDDLE, -stage.grid.Y_IN_MIDDLE, canvas.width, canvas.height);
-                    context.resetTransform();
-                    
-                    // DEV_NOTE # alternatively we can call `context.transformLayer()` by asking to read `transform` from `ViewGroup.Layer({ transform: numbers[] })` itself:
-                    if ( context.transformLayer() ){
-                        context.rotate( degToRad( Number( document.querySelector('slider-input').angle) ) )
-                        stage.layers[canvas.name].add([
-                            RightTriangle.draw({context})
-                            ,
-                        ]);
-                    }
-
-                break;
 
             endswitch:;}
 

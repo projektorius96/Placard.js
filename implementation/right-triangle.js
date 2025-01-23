@@ -2,7 +2,7 @@ import Placard from '../src/index';
 
 export default class {
 
-    static draw({context}) {
+    static draw({context}) {        
 
         const 
             { COLORS } = Placard.Views.Line.ENUMS
@@ -19,8 +19,8 @@ export default class {
                     strokeStyle: COLORS.red.value,
                     points: [ 
                         [
-                            ( context.global.options.scalingValue * stage.grid.GRIDCELL_DIM * context.snapToGrid ) , ( context.global.options.scalingValue * stage.grid.GRIDCELL_DIM * context.snapToGrid )
-                        ],
+                            ( context.global.options.scalingValue * stage.grid.GRIDCELL_DIM ) , ( context.global.options.scalingValue * stage.grid.GRIDCELL_DIM )
+                        ].map((each)=>each  *= context.snapToGrid),
                     ]
                 }
             })
@@ -52,8 +52,8 @@ export default class {
                     strokeStyle: COLORS.blue.value,
                     points: [ 
                         [
-                            ( context.global.options.scalingValue * stage.grid.GRIDCELL_DIM * context.snapToGrid ) , ( context.global.options.scalingValue * stage.grid.GRIDCELL_DIM * context.snapToGrid )
-                        ] 
+                            ( context.global.options.scalingValue * stage.grid.GRIDCELL_DIM ) , ( context.global.options.scalingValue * stage.grid.GRIDCELL_DIM )
+                        ].map((each)=>each  *= context.snapToGrid) 
                     ]
                     ,
                     overrides: {
