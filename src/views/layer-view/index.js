@@ -63,18 +63,8 @@ customElements.define(layer_view, class extends HTMLCanvasElement {
 
                 const context = this;
 
-                // DEV_NOTE # The following if..else flow decides Layer-level (i.e. grouped, global – all are synonyms) matrix transformation (a.k.a. transform)
-                if (!context.global.options.ejectXY) {
-                    context.setTransform( ...transform$noTranslation , ( stage.grid.X_IN_MIDDLE + translationX )  , ( stage.grid.Y_IN_MIDDLE + translationY ) )
-                    if (context.global.options.startAtQ1){
-                        context.rotate(-45 * (Math.PI / 180))
-                    }
-                } else {
-                    context.setTransform( ...transform$noTranslation , ( translationX                           ) , ( translationY                          ) )
-                    if (context.global.options.startAtQ1){
-                        context.rotate(-45 * (Math.PI / 180))
-                    }
-                }
+                context.setTransform( ...transform$noTranslation , ( translationX ) , ( translationY ) )
+                if (context.global.options.startAtQ1) context.rotate(-45 * (Math.PI / 180))
 
                 return true;
 

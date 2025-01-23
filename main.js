@@ -31,10 +31,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
     const stage = new Stage({scale: 20});
         if ( stage ) {
-            // DEV_NOTE # herein we add "Layer(s)" to the current "Stage", accessible via `stage.layers` alias:
-
             stage.add([
-                new Layer({ name: 'grid', opacity: 0.25, hidden: !true })
+                new Layer({ name: 'grid', opacity: 0.25 })
                 ,
                 new Layer({name: 'wireframe', hidden: true})
                 ,
@@ -42,14 +40,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 , *//* <=== DEV_NOTE (!) # if this is instantiated, session-level (tab) `console.log` may halt the CPU, due to anti-aliasing part in `setRange(0, 0.1 , 720, false)` call, thus commented out */
                 new Layer({ name: 'unit-of-circle' })
                 ,
-                new Layer({ 
-                    name: 'right-triangle-v2', 
-                    transform: [
-                        ...Trigonometry.setAngle( 0 )
-                        , 
-                        ...[0, 0]
-                    ] 
-                })
+                new Layer({ name: 'right-triangle' })
+                ,
+                new Layer({ name: 'arc' })
                 ,
             ]);
         }
