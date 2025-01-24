@@ -23,7 +23,7 @@ export default function setView({stage, Placard, UserSettings}){
         ;
 
     Placard
-    .init({stage, stageScale: 20 /* <=== DEV_NOTE # the thumb of rule is between 15-20 (in relative units) */})
+    .init({stage})
     .on((context)=>{
         
         if ( UserSettings.init({context}) ) {
@@ -35,47 +35,58 @@ export default function setView({stage, Placard, UserSettings}){
             
             switch (canvas.name) {
 
-                /* === GRID === */
-                case 'grid' :
+                /* === SECTOR === */
+                case 'sector' :
+                
+                    context.setTransform(...setAngle(-45), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                    context.rotate( degToRad( Number( document.querySelector('slider-input').angle ) ) )
 
-                    stage.layers.grid.add([
-                        Placard.Views.Grid.draw({
-                            canvas: stage.layers.grid, 
-                            options: {
-                                lineWidth: 2,
-                            }}
-                        )
+                    stage.layers[canvas.name].add([
+                        RightTriangle.draw({context})
                         ,
-                    ]);
+                        void function(){
 
-                break;
-
-                /* === UNIT-OF-CIRCLE === */
-                case 'unit-of-circle' :
-
-                context.clearRect(0, 0, canvas.width, canvas.height)
-
-                    stage.layers.grid.add([
-                        void function () {
-                            context.setTransform(...setAngle(0), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
-
+                            context.rotate(degToRad(45))
                             context.beginPath();
                             context.arc(
                                 /* x */ 0, 
                                 /* y */ 0, 
-                                /* radius */ (context.global.options.scalingValue * stage.grid.GRIDCELL_DIM * Placard.Views.Line.RIGHTANGLE_SLOPE) * context.global.options.responsiveValue, 
+                                /* radius */ (context.global.options.scalingValue * stage.grid.GRIDCELL_DIM), 
                                 /* startAngle */ 0, 
-                                /* endAngle */ 2 * Math.PI,
+                                /* endAngle */   degToRad(180 / Math.PI),
                                 /* anticlockwise */ true
                             );
                             context.lineWidth = context.global.options.lineWidth;
+                            context.strokeStyle = 'black';
+                            /* context.globalCompositeOperation = 'source-over'; */// @DEFAULT
                             context.stroke();
+
+                        }()
+                        ,
+                        void function(){
+
+                            context.rotate(degToRad(45))
+                            context.beginPath();
+                            context.arc(
+                                /* x */ 0, 
+                                /* y */ 0, 
+                                /* radius */ (context.global.options.scalingValue * stage.grid.GRIDCELL_DIM), 
+                                /* startAngle */ 0, 
+                                /* endAngle */   2 * Math.PI,
+                                /* anticlockwise */ true
+                            );
+                            context.lineWidth = context.global.options.lineWidth;
+                            context.strokeStyle = 'blue';
+                            context.globalCompositeOperation = 'destination-over';
+                            context.stroke();
+
                         }()
                         ,
                     ]);
-
-                break;
                 
+                break;
+
                 /* === WIREFRAMES === */
                 case stage.layers.wireframe?.name :
 
@@ -99,20 +110,18 @@ export default function setView({stage, Placard, UserSettings}){
 
                 break ;
 
-                /* === RIGHT-TRIANGLE === */
-                case 'right-triangle' :
+                /* === GRID === */
+                case 'grid' :
 
-                    context.clearRect(-stage.grid.X_IN_MIDDLE, -stage.grid.Y_IN_MIDDLE, canvas.width, canvas.height);
-                    context.resetTransform();
-                    
-                    // DEV_NOTE # alternatively we can call `context.transformLayer()` by asking to read `transform` from `ViewGroup.Layer({ transform: numbers[] })` itself:
-                    if ( context.transformLayer() ){
-                        context.rotate( degToRad( Number( document.querySelector('slider-input').angle) ) )
-                        stage.layers[canvas.name].add([
-                            RightTriangle.draw({context})
-                            ,
-                        ]);
-                    }
+                    stage.layers.grid.add([
+                        Placard.Views.Grid.draw({
+                            canvas: stage.layers.grid, 
+                            options: {
+                                lineWidth: 2,
+                            }}
+                        )
+                        ,
+                    ]);
 
                 break;
 

@@ -15,8 +15,9 @@ export default class grid {
             ;
 
         const context = canvas.getContext('2d');
-            context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
-            context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+        
+        context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
         
         /** {@link https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Transformations} */
         function drawGrid(x, y, xLen = gridcellDim, yLen = gridcellDim) {

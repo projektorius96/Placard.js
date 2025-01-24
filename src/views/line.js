@@ -39,7 +39,7 @@ export default class {
         if (options.overrides?.transform){
             if (options.overrides.transform?.translation){
                 let { x, y } = options.overrides.transform.translation;
-                context.translate(x * context.global.options.responsiveValue, y * context.global.options.responsiveValue)
+                context.translate(x/*  * context.global.options.responsiveValue */, y/*  * context.global.options.responsiveValue */)
             }
             if (options.overrides.transform?.angle){
                 context.rotate(options.overrides.transform.angle)
@@ -77,9 +77,9 @@ export default class {
 
                 }
                 context.lineTo(
-                    (context.global.options.responsiveValue * (point[0]))
+                    (/* context.global.options.responsiveValue *  */(point[0]))
                     , 
-                    (context.global.options.responsiveValue * (point[1]))
+                    (/* context.global.options.responsiveValue *  */(point[1]))
                 );
                 
             });
@@ -99,8 +99,8 @@ export default class {
                 this.#addArrowTip({
                     context,
                     options,
-                    x2: (point[0]) * context.global.options.responsiveValue,
-                    y2: (point[1]) * context.global.options.responsiveValue,
+                    x2: (point[0])/*  * context.global.options.responsiveValue */,
+                    y2: (point[1])/*  * context.global.options.responsiveValue */,
                     arrowTip: (options?.arrowTip || {baseLength : (context.global.options.lineWidth * 5), capLength : 0, width : (context.global.options.lineWidth * 5)})
                 });
             });
@@ -131,7 +131,7 @@ export default class {
 
         let { x: offsetX, y: offsetY } = (options.overrides?.transform?.translation || {x: 0, y: 0});
         let angleXY = (options.overrides?.transform?.angle || 0);
-            context.translate(offsetX * context.global.options.responsiveValue, offsetY * context.global.options.responsiveValue)
+            context.translate(offsetX/*  * context.global.options.responsiveValue */, offsetY/*  * context.global.options.responsiveValue */)
             context.rotate(angleXY)
 
             // Calculate the angle of the line
