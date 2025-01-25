@@ -39,7 +39,7 @@ export default class {
         DEFAULT_ANGLE = 0
         ,
         GUI = new HUD({container: document.body, draggable: !true, hidden: !true})
-        const slider = GUI.find( GUI.addGroup({ open: true, label: false, name: 'slider', nodes: GUI.addSection({sectionCount: 1, accessor: 'slot', flex_direction: 'row'}) }) ); 
+        const slider = globalThis.slider = GUI.find( GUI.addGroup({ open: true, label: false, name: 'slider', nodes: GUI.addSection({sectionCount: 1, accessor: 'slot', flex_direction: 'row'}) }) ); 
                 slider
                 .children
                 .slot1.append(...[

@@ -42,38 +42,55 @@ export default function setView({stage, Placard, UserSettings}){
                 case 'sector' :
                 
                     const 
-                        angle$sector = 45/* angle degrees */
-                        ,
-                        [ANTI_CLOCKWISE, CLOCKWISE] = [180 /* angle degrees */, 0 /*angle degrees */]
+                        [
+                            sector$angle
+                            , 
+                            arc$angle
+                        ] = [
+                            45
+                            , 
+                            0
+                        ]
                         ;
-                    
-                    let sense = [ANTI_CLOCKWISE, CLOCKWISE];
-                        sense = sense.at( Number( !false ) );
 
-                    context.setTransform(...setAngle(-1 * angle$sector), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
+                    
+                    let sense = 180;
+                    switch ( Number( document.querySelector('slider-input')?.sense ) ) {
+                        case -1 :
+                            sense = 180;/* in angle degrees */
+                            break;
+                        case 1 :
+                            sense = 0;/* in angle degrees */
+                            break;
+                    }
+
+                    context.setTransform(...setAngle(-1 * sector$angle), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
                     context.clearRect(0, 0, canvas.width, canvas.height);
-                    context.rotate( degToRad( Number( document.querySelector('slider-input').angle ) ) );
+                    context.rotate( degToRad( Number( document.querySelector('slider-input')?.angle ) ) );
 
                     stage.layers[canvas.name].add([
                         RightTriangle.draw({context})
                         ,
                         void function(){
 
-                            let angle$arc = 0
-                            context.rotate(degToRad(angle$sector + angle$arc)) /* rotate arc itself along the edge of the circle */
-                            context.beginPath();
-                            context.arc(
-                                /* x */ 0, 
-                                /* y */ 0, 
-                                /* radius */ (context.global.options.scalingValue * stage.grid.GRIDCELL_DIM), 
-                                /* startAngle */ 0, 
-                                /* endAngle */  degToRad(180 / Math.PI),
-                                /* anticlockwise */ true
-                            );
-                            context.lineWidth = context.global.options.lineWidth;
-                            context.strokeStyle = 'black';
-                            /* context.globalCompositeOperation = 'source-over'; */// @DEFAULT
-                            context.stroke();
+                            /* context.save() */
+
+                                context.rotate(degToRad(sector$angle + arc$angle)) /* rotate arc itself along the edge of the circle */
+                                context.beginPath();
+                                context.arc(
+                                    /* x */ 0, 
+                                    /* y */ 0, 
+                                    /* radius */ (context.global.options.scalingValue * stage.grid.GRIDCELL_DIM), 
+                                    /* startAngle */ 0, 
+                                    /* endAngle */  degToRad(180 / Math.PI),
+                                    /* anticlockwise */ true
+                                );
+                                context.lineWidth = context.global.options.lineWidth;
+                                context.strokeStyle = 'black';
+                                /* context.globalCompositeOperation = 'source-over'; */// @DEFAULT
+                                context.stroke();
+
+                            /* context.restore() */
 
                         }()
                         ,
@@ -81,22 +98,20 @@ export default function setView({stage, Placard, UserSettings}){
 
                             /* context.save() */// # context is preserved, meaning above context.rotate will rotate arc and its arrow tip as one unit
 
-
-
-                            context.rotate(degToRad(-1 * (sense / Math.PI) ) )
-                            context.beginPath();
-                            context.arc(
-                                /* x */ 0, 
-                                /* y */ 0, 
-                                /* radius */ (context.global.options.scalingValue * stage.grid.GRIDCELL_DIM), 
-                                /* startAngle */ 0, 
-                                /* endAngle */   2 * Math.PI,
-                                /* anticlockwise */ true
-                            );
-                            context.lineWidth = context.global.options.lineWidth;
-                            context.strokeStyle = 'blue';
-                            context.globalCompositeOperation = 'destination-over';
-                            context.stroke();
+                                context.rotate(degToRad(-1 * (sense / Math.PI) ) )
+                                context.beginPath();
+                                context.arc(
+                                    /* x */ 0, 
+                                    /* y */ 0, 
+                                    /* radius */ (context.global.options.scalingValue * stage.grid.GRIDCELL_DIM), 
+                                    /* startAngle */ 0, 
+                                    /* endAngle */   2 * Math.PI,
+                                    /* anticlockwise */ true
+                                );
+                                context.lineWidth = context.global.options.lineWidth;
+                                context.strokeStyle = 'blue';
+                                context.globalCompositeOperation = 'destination-over';
+                                context.stroke();
 
                             /* context.restore() */
 
