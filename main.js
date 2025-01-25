@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 .on('input', (e)=>{
         
                     const [ANTI_CLOCKWISE, CLOCKWISE] = [-1, 1];
-                    const current = {angle: ANTI_CLOCKWISE * Math.floor(e.target.value)};
+                    const current = {angle: /* ANTI_ */CLOCKWISE * Math.floor(e.target.value)};
 
                     document.querySelector(`${slider_input}`).angle = current.angle;
         

@@ -38,7 +38,8 @@ export default function setView({stage, Placard, UserSettings}){
                 /* === SECTOR === */
                 case 'sector' :
                 
-                    context.setTransform(...setAngle(-45), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
+                    let sharedAngle = -45;
+                    context.setTransform(...setAngle(sharedAngle), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
                     context.clearRect(0, 0, canvas.width, canvas.height);
                     context.rotate( degToRad( Number( document.querySelector('slider-input').angle ) ) )
 
@@ -81,8 +82,29 @@ export default function setView({stage, Placard, UserSettings}){
                             context.globalCompositeOperation = 'destination-over';
                             context.stroke();
 
+                            context.globalCompositeOperation = 'source-over';
+                            Placard.Views.Line.addArrowTip({
+                                context,
+                                x2: 0,
+                                y2: 0,
+                                options: {
+                                    overrides: {
+                                        transform: {
+                                            /* DEV_NOTE (!) # then {x2, y2} is set to 0s, the `overrides.transform.angle` allows us rotating arrow tip along itself rather than to its relative origin (tail) */
+                                            angle: degToRad( 90 /* + 145 *//* 1^# adjusts with red vector */),
+                                            translation: {
+                                                x: context.global.options.scalingValue * stage.grid.GRIDCELL_DIM * Math.cos(degToRad( ( sharedAngle + (180  / Math.PI)/*  + 300 *//* 1^# adjusts with red vector */) )),
+                                                y: context.global.options.scalingValue * stage.grid.GRIDCELL_DIM * Math.sin(degToRad( ( sharedAngle + (180  / Math.PI)/*  + 300 *//* 1^# adjusts with red vector */) )),
+                                            },
+                                        }
+                                    }
+                                },
+                                arrowTip: {
+                                    baseLength : context.global.options.lineWidth * 4, capLength : 0, width : context.global.options.lineWidth * 4
+                                }
+                            });
+
                         }()
-                        ,
                     ]);
                 
                 break;
