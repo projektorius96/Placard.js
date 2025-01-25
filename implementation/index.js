@@ -8,6 +8,9 @@ export function Notifier(prop, oldProp, newProp) {
         case 'angle' : 
             oldProp = newProp;
         break;
+        case 'sense' : 
+            oldProp = newProp;
+        break;
     }
 
 }
@@ -38,24 +41,33 @@ export default function setView({stage, Placard, UserSettings}){
                 /* === SECTOR === */
                 case 'sector' :
                 
-                    let sharedAngle = -45;
-                    context.setTransform(...setAngle(sharedAngle), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
+                    const 
+                        angle$sector = 45/* angle degrees */
+                        ,
+                        [ANTI_CLOCKWISE, CLOCKWISE] = [180 /* angle degrees */, 0 /*angle degrees */]
+                        ;
+                    
+                    let sense = [ANTI_CLOCKWISE, CLOCKWISE];
+                        sense = sense.at( Number( !false ) );
+
+                    context.setTransform(...setAngle(-1 * angle$sector), stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE);
                     context.clearRect(0, 0, canvas.width, canvas.height);
-                    context.rotate( degToRad( Number( document.querySelector('slider-input').angle ) ) )
+                    context.rotate( degToRad( Number( document.querySelector('slider-input').angle ) ) );
 
                     stage.layers[canvas.name].add([
                         RightTriangle.draw({context})
                         ,
                         void function(){
 
-                            context.rotate(degToRad(45))
+                            let angle$arc = 0
+                            context.rotate(degToRad(angle$sector + angle$arc)) /* rotate arc itself along the edge of the circle */
                             context.beginPath();
                             context.arc(
                                 /* x */ 0, 
                                 /* y */ 0, 
                                 /* radius */ (context.global.options.scalingValue * stage.grid.GRIDCELL_DIM), 
                                 /* startAngle */ 0, 
-                                /* endAngle */   degToRad(180 / Math.PI),
+                                /* endAngle */  degToRad(180 / Math.PI),
                                 /* anticlockwise */ true
                             );
                             context.lineWidth = context.global.options.lineWidth;
@@ -67,7 +79,11 @@ export default function setView({stage, Placard, UserSettings}){
                         ,
                         void function(){
 
-                            context.rotate(degToRad(45))
+                            /* context.save() */// # context is preserved, meaning above context.rotate will rotate arc and its arrow tip as one unit
+
+
+
+                            context.rotate(degToRad(-1 * (sense / Math.PI) ) )
                             context.beginPath();
                             context.arc(
                                 /* x */ 0, 
@@ -82,19 +98,21 @@ export default function setView({stage, Placard, UserSettings}){
                             context.globalCompositeOperation = 'destination-over';
                             context.stroke();
 
+                            /* context.restore() */
+
                             context.globalCompositeOperation = 'source-over';
                             Placard.Views.Line.addArrowTip({
                                 context,
-                                x2: 0,
-                                y2: 0,
+                                x2: 1 * Math.cos(degToRad(90 + sense)),
+                                y2: 1 * Math.sin(degToRad(90 + sense)),
                                 options: {
                                     overrides: {
                                         transform: {
                                             /* DEV_NOTE (!) # then {x2, y2} is set to 0s, the `overrides.transform.angle` allows us rotating arrow tip along itself rather than to its relative origin (tail) */
-                                            angle: degToRad( 90 /* + 145 *//* 1^# adjusts with red vector */),
+                                            angle: degToRad( (180 / Math.PI) ),
                                             translation: {
-                                                x: context.global.options.scalingValue * stage.grid.GRIDCELL_DIM * Math.cos(degToRad( ( sharedAngle + (180  / Math.PI)/*  + 300 *//* 1^# adjusts with red vector */) )),
-                                                y: context.global.options.scalingValue * stage.grid.GRIDCELL_DIM * Math.sin(degToRad( ( sharedAngle + (180  / Math.PI)/*  + 300 *//* 1^# adjusts with red vector */) )),
+                                                x: context.global.options.scalingValue * stage.grid.GRIDCELL_DIM * Math.cos(degToRad( ( (180  / Math.PI) ) )),
+                                                y: context.global.options.scalingValue * stage.grid.GRIDCELL_DIM * Math.sin(degToRad( ( (180  / Math.PI) ) )),
                                             },
                                         }
                                     }
