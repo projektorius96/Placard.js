@@ -96,7 +96,7 @@ export default class {
         if (options.kind === this.ENUMS.KIND.vector.value) {
 
             options.points.forEach((point)=>{
-                this.#addArrowTip({
+                this.addArrowTip({
                     context,
                     options,
                     x2: (point[0])/*  * context.global.options.responsiveValue */,
@@ -125,7 +125,7 @@ export default class {
      * @param {number} [capLength] - Cap length of the arrowhead
      * @param {number} [width] - Width of the arrowhead (distance between its two "wings")
      */
-    static #addArrowTip({context, options, x2, y2, x1 = 0, y1 = 0, arrowTip}){
+    static addArrowTip({context, options, x2, y2, x1 = 0, y1 = 0, arrowTip}){
 
         context.save();
 

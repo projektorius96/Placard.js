@@ -38,8 +38,8 @@ export default class {
     const 
         DEFAULT_ANGLE = 0
         ,
-        GUI = new HUD({container: document.body, draggable: !true, hidden: !true})
-        const slider = GUI.find( GUI.addGroup({ open: true, label: false, name: 'slider', nodes: GUI.addSection({sectionCount: 1, accessor: 'slot', flex_direction: 'row'}) }) ); 
+        GUI = new HUD({container: document.body, draggable: true, hidden: !true})
+        const slider = globalThis.slider = GUI.find( GUI.addGroup({ open: true, label: false, name: 'slider', nodes: GUI.addSection({sectionCount: 1, accessor: 'slot', flex_direction: 'row'}) }) ); 
                 slider
                 .children
                 .slot1.append(...[
@@ -52,6 +52,35 @@ export default class {
                         }
                     })
                 ]);
+
+        if ( !screen.orientation.type.includes('portrait') ){
+
+            GUI.addEventListener('dblclick', async function(){
+                
+                
+                const pipWindow = await documentPictureInPicture.requestWindow({
+                    disallowReturnToOpener: true,
+                    preferInitialWindowPlacement: !true,
+                    width: this.getBoundingClientRect()['width'],
+                    height: this.getBoundingClientRect()['height'],
+                });
+
+                const { justifySelf, position } = getComputedStyle(this);
+                    this.style.position = 'static';
+                    this.style.justifySelf = 'stretch';
+                pipWindow.document.body.appendChild(GUI);
+                pipWindow.document.body.style.overflow = 'hidden';
+                pipWindow.addEventListener("pagehide", (event) => {
+                    
+                    this.style.position = position; 
+                    this.style.justifySelf = justifySelf; 
+                    document.body.appendChild(GUI);
+
+                });
+
+            })
+
+        }
 
     export {
         GUI

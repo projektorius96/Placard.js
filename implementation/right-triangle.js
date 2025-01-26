@@ -29,7 +29,7 @@ export default class {
                 canvas,
                 options: {
                     kind: 'vector', /* DEV_NOTE # can be used with `arrowTip`  */
-                    /* arrowTip : {baseLength : 20, capLength : 20, width : 20}, */// 1^[PASSING]
+                    /* arrowTip : {baseLength : 20, capLength : 0, width : 20}, */// 1^[PASSING]
                     strokeStyle: COLORS.green.value,
                     points: [ 
                         [

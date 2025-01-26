@@ -9,20 +9,23 @@ document.addEventListener('DOMContentLoaded', ()=>{
     ///* # (@1.2) */
     document.title = package_json.name;
 
-    const slider_input = 'slider-input';
-    document.body.appendChild(
-        Observer(
-            slider_input
-            ,
-            new Map([
-                ['angle', 0],
-            ])
-            ,
-            {
-                isObserved
-            }
+    const sliderInput = Observer(
+        'slider-input'
+        ,
+        new Map([
+            ['angle', 0],
+            ['sense', -1],
+        ])
+        ,
+        {
+            isObserved
+        }
+    );
+    if (sliderInput){
+        document.body.appendChild(
+            sliderInput
         )
-    )
+    }
 
     const 
         { Stage, Layer } = Placard.ViewGroup
@@ -50,12 +53,14 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
                 slider
                 .on('input', (e)=>{
-        
-                    const [ANTI_CLOCKWISE, CLOCKWISE] = [-1, 1];
-                    const current = {angle: ANTI_CLOCKWISE * Math.floor(e.target.value)};
 
-                    document.querySelector(`${slider_input}`).angle = current.angle;
-        
+                    const [ANTI_CLOCKWISE, CLOCKWISE] = [-1, 1];
+                        // DEV_NOTE # (un-)comment "ANTI_" suffix and observe how arc's non-linear vector direction (a.k.a. sense) matches with rotation sense itself
+                        sliderInput.sense = /* ANTI_ */CLOCKWISE;
+
+                    const current = { angle: sliderInput.sense * Number( Math.floor( e.target.value ) ) };
+                        sliderInput.angle = current.angle;
+                        
                     // DEV_NOTE (!) # Placard.js reponsive web experience internally based on window.onresize, so we MUST dispatch the following: 
                     window.dispatchEvent(new Event('resize'));
         
