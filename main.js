@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
         'slider-input'
         ,
         new Map([
-            ['angle', 0],
+            ['angle',  0],
             ['sense', -1],
         ])
         ,
@@ -48,15 +48,29 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
     /* === GUI === */
 
-        const slider = GUI.getInput({name: 'slider'});
+        const slider = GUI.getInput({name: 'rotation'});
             if (slider){
+
+                GUI.getInput({name: 'sense'}).on('change', function (e) {
+
+                    const 
+                        [ANTI_CLOCKWISE, CLOCKWISE] = [-1, 1]
+                        ,
+                        senseMapper = new Map([
+                            [false, ANTI_CLOCKWISE],
+                            [true, CLOCKWISE],
+                        ])
+                        ;
+                    
+                    sliderInput.sense = senseMapper.get(e.target.checked)
+
+                    // DEV_NOTE # we have to dispatch the following, if we want to see non-linear vector tip's sense (direction) to be synchronized with `sliderInput.sense` value being set;
+                    slider.dispatchEvent(new Event('input'));
+                    
+                })
 
                 slider
                 .on('input', (e)=>{
-
-                    const [ANTI_CLOCKWISE, CLOCKWISE] = [-1, 1];
-                        // DEV_NOTE # (un-)comment "ANTI_" suffix and observe how arc's non-linear vector direction (a.k.a. sense) matches with rotation sense itself
-                        sliderInput.sense = /* ANTI_ */CLOCKWISE;
 
                     const current = { angle: sliderInput.sense * Number( Math.floor( e.target.value ) ) };
                         sliderInput.angle = current.angle;

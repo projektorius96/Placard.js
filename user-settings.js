@@ -15,12 +15,6 @@ export default class {
         Object.assign(context, {
             global: {
                 options: {
-                    /* 
-                        EXAMPLE : Conventionally we define Placard-specific properties, where each property's key is in "['key'] : value" form, otherwise it's Canvas API reflective key(s) e.g. "strokeStyle: 3"
-                    */
-                    ['ejectXY']: false,
-                    ['startAtQ1']: true,
-                    ['responsiveValue']: Placard.getResponsiveRatio({context}),
                     scalingValue: 3,
                     lineWidth: 4,
                     strokeStyle: 'grey',
@@ -39,45 +33,75 @@ export default class {
         DEFAULT_ANGLE = 0
         ,
         GUI = new HUD({container: document.body, draggable: true, hidden: !true})
-        const slider = globalThis.slider = GUI.find( GUI.addGroup({ open: true, label: false, name: 'slider', nodes: GUI.addSection({sectionCount: 1, accessor: 'slot', flex_direction: 'row'}) }) ); 
-                slider
-                .children
-                .slot1.append(...[
-                    new Label('rotation')
+            
+            const rotator = GUI.find( 
+
+                GUI.addGroup({ open: true, label: !false, name: 'rotation', nodes: GUI.addSection({sectionCount: 2, accessor: 'slot', flex_direction: 'row'}) })
+                
+            ); 
+            rotator
+            .children
+            .slot1.append(...[
+                new Label('rotator')
+                ,
+                new Input({
+                    name: rotator.name, 
+                    attrs: {
+                        value: DEFAULT_ANGLE, min: 0, max: 360, step: 1
+                    }
+                })
+            ]);
+                
+                // EXAMPLE # showing how to add <details> foldable element via addGroup call and nested under direct parent given 
+
+
+            const rotatorSense = GUI.find(
+
+                GUI.addGroup({ 
+                    nestedUnder: rotator.children.slot2
+                    , 
+                    open: true, label: !false, name: `sense`, nodes: GUI.addSection({sectionCount: 1, accessor: 'slot', flex_direction: 'row'}) 
+                })
+
+                );
+                rotatorSense.children.slot1.append(...[
+                    new Label('sensor')
                     ,
                     new Input({
-                        name: slider.name, 
-                        attrs: {
-                            value: DEFAULT_ANGLE, min: 0, max: 360, step: 1
-                        }
+                        name: rotatorSense.name,
+                        type: 'checkbox',
+                        attrs: {cboxScaling: 1.0}
                     })
                 ]);
-
+        
         if ( !screen.orientation.type.includes('portrait') ){
 
-            GUI.addEventListener('dblclick', async function(){
-                
-                
-                const pipWindow = await documentPictureInPicture.requestWindow({
-                    disallowReturnToOpener: true,
-                    preferInitialWindowPlacement: !true,
-                    width: this.getBoundingClientRect()['width'],
-                    height: this.getBoundingClientRect()['height'],
-                });
+            GUI.addEventListener('dblclick', async function(e){
 
-                const { justifySelf, position } = getComputedStyle(this);
-                    this.style.position = 'static';
-                    this.style.justifySelf = 'stretch';
-                pipWindow.document.body.appendChild(GUI);
-                pipWindow.document.body.style.overflow = 'hidden';
-                pipWindow.addEventListener("pagehide", (event) => {
-                    
-                    this.style.position = position; 
-                    this.style.justifySelf = justifySelf; 
-                    document.body.appendChild(GUI);
+                if (e.ctrlKey){
 
-                });
+                    const pipWindow = await documentPictureInPicture.requestWindow({
+                        disallowReturnToOpener: true,
+                        preferInitialWindowPlacement: !true,
+                        width: this.getBoundingClientRect()['width'],
+                        height: this.getBoundingClientRect()['height'],
+                    });
+    
+                    const { justifySelf, position } = getComputedStyle(this);
+                        this.style.position = 'static';
+                        this.style.justifySelf = 'stretch';
+                    pipWindow.document.body.appendChild(GUI);
+                    pipWindow.document.body.style.overflow = 'hidden';
+                    pipWindow.addEventListener("pagehide", (event) => {
+                        
+                        this.style.position = position; 
+                        this.style.justifySelf = justifySelf; 
+                        document.body.appendChild(GUI);
+    
+                    });
 
+                }
+                                
             })
 
         }

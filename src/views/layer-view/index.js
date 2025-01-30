@@ -25,11 +25,7 @@ customElements.define(layer_view, class extends HTMLCanvasElement {
         const
             canvasLayer = this
             ,
-            canvasLayerContext = this.getContext('2d')
-            ,
-            transform$noTranslation = [...canvasLayer.transform].slice(0, canvasLayer.transform.length-2)
-            ,
-            [translationX, translationY] = [...canvasLayer.transform].slice(-2)
+            canvasLayerContext = canvasLayer.getContext('2d')
             ; 
 
         Object.assign(canvasLayer, {
@@ -55,19 +51,6 @@ customElements.define(layer_view, class extends HTMLCanvasElement {
 
                 return true;
                 
-            }
-
-            ,
-
-            transformLayer() {  
-
-                const context = this;
-
-                context.setTransform( ...transform$noTranslation , ( translationX ) , ( translationY ) )
-                if (context.global.options.startAtQ1) context.rotate(-45 * (Math.PI / 180))
-
-                return true;
-
             }
 
         });   
