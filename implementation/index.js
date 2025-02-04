@@ -28,7 +28,7 @@ export default function setView({stage, Placard, UserSettings}){
     Placard
     .init({stage})
     .on((context)=>{
-        
+
         if ( UserSettings.init({context}) ) {
 
             // DEV_NOTE # scale twice as big, if mobile device is detected :
@@ -41,7 +41,7 @@ export default function setView({stage, Placard, UserSettings}){
                 /* === SECTOR === */
                 case 'sector' :
                 
-                    const 
+                    const
                         [
                             sector$angle
                             , 

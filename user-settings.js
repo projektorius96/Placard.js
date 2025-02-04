@@ -1,4 +1,3 @@
-import Placard from './src/index';
 import { HUD, Input, Label } from '@wc-pane/index.js';
 
 /** 
