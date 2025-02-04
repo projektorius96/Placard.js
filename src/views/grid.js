@@ -1,3 +1,5 @@
+import { degToRad } from '../trigonometry'
+
 export default class grid {
 
     /**
@@ -18,6 +20,15 @@ export default class grid {
         
         context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
         context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+
+        if (canvas.isSkewed){
+            let sign = canvas?.isSkewed.sign || 1;
+            let { a, b, c, d, e, f } = context.getTransform();
+                c = sign * 1;
+            context.setTransform(a, b, c, d, -context.canvas.width/2, f);
+            if (context.canvas.width <= context.canvas.height && sign > 0) context.translate(-1 * context.canvas.width/4, 0) ;
+            if (context.canvas.width <= context.canvas.height && sign < 0) context.translate(+1 * context.canvas.width/4, 0) ;
+        }
         
         /** {@link https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Transformations} */
         function drawGrid(x, y, xLen = gridcellDim, yLen = gridcellDim) {

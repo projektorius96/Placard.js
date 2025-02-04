@@ -32,14 +32,14 @@ document.addEventListener('DOMContentLoaded', ()=>{
         ,
         { Trigonometry } = Placard.Helpers
 
-    const stage = new Stage({scale: 20});
+    const stage = new Stage({scale: 30});
         if ( stage ) {
             stage.add([
-                new Layer({ name: 'grid', opacity: 0.25 })
+                new Layer({ name: 'grid', opacity: 0.25, isSkewed: {sign: -1} })
                 ,
                 new Layer({name: 'wireframe', hidden: true})
                 ,
-                /* new Layer({name: 'ring', hidden: true})
+                /* new Layer({name: 'ring'})
                 , *//* <=== DEV_NOTE (!) # if this is instantiated, session-level (tab) `console.log` may halt the CPU, due to anti-aliasing part in `setRange(0, 0.1 , 720, false)` call, thus commented out */
                 new Layer({ name: 'sector' })
                 ,
