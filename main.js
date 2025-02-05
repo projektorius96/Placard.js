@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
     const stage = new Stage({scale: 30});
         if ( stage ) {
             stage.add([
-                new Layer({ name: 'grid', opacity: 0.25/* , isSkewed: {sign: -1} */ })
+                new Layer({ name: 'grid', opacity: 0.25, isSkewed: {/* sign: +1 */} })
                 ,
                 new Layer({ name: 'sector' })
                 ,

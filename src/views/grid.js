@@ -18,17 +18,50 @@ export default class grid {
 
         const context = canvas.getContext('2d');
         
-        context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
-        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-
         if (canvas.isSkewed){
-            let sign = canvas?.isSkewed.sign || 1;
-            let { a, b, c, d, e, f } = context.getTransform();
-                c = sign * 1;
-            context.setTransform(a, b, c, d, -context.canvas.width/2, f);
-            if (context.canvas.width <= context.canvas.height && sign > 0) context.translate(-1 * context.canvas.width/4, 0) ;
-            if (context.canvas.width <= context.canvas.height && sign < 0) context.translate(+1 * context.canvas.width/4, 0) ;
+
+        context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+
+        let sign = canvas?.isSkewed.sign || -1;
+        let { a, b, c, d, e, f } = context.getTransform();
+            c = sign * 1;
+            e = -1 * context.canvas.width/2
+        context.setTransform(a, b, c, d, e, f);
+
+        /**
+         * @algorithm
+         * @mediaqueries
+         */
+        if (context.canvas.width <= context.canvas.height && sign > 0) context.translate(-1 * context.canvas.width/4, 0) ;
+        if (context.canvas.width <= context.canvas.height && sign < 0) context.translate(+1 * context.canvas.width/4, 0) ;
+
+       /*  context.save() */
+
+        if (options.overrides?.transform){
+            if (options.overrides.transform?.translation){
+                let { x, y } = options.overrides.transform.translation;
+                context.translate(x, y)
+            }
+            if (options.overrides.transform?.angle){
+                context.rotate(options.overrides.transform.angle)
+                context.currentAngle = options.overrides.transform.angle;
+            }
+            if (options.overrides.transform?.scale){
+                let { x, y } = options.overrides.transform.scale;
+                context.scale(x, y);
+            }
         }
+
+        } else {
+
+            /**
+             * @default
+             */
+            context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+            context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+
+        }
+        
         
         /** {@link https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Transformations} */
         function drawGrid(x, y, xLen = gridcellDim, yLen = gridcellDim) {
@@ -41,6 +74,8 @@ export default class grid {
             /* context.stroke(); */
 
             options.hidden ? false : context.stroke();
+
+            /* context.restore() */
 
         }
 

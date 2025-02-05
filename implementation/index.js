@@ -168,6 +168,8 @@ export default function setView({stage, Placard, UserSettings}){
                 /* === GRID === */
                 case 'grid' :
 
+                if (!canvas.isSkewed){
+
                     stage.layers.grid.add([
                         Placard.Views.Grid.draw({
                             canvas: stage.layers.grid, 
@@ -177,6 +179,35 @@ export default function setView({stage, Placard, UserSettings}){
                         )
                         ,
                     ]);
+
+                } else {
+
+                    stage.layers.grid.add([
+                        Placard.Views.Grid.draw({
+                            canvas: stage.layers.grid, 
+                            options: {
+                                lineWidth: 2,
+                            }}
+                        )
+                        ,
+                        Placard.Views.Grid.draw({
+                            canvas: stage.layers.grid, 
+                            options: {
+                                lineWidth: 2,
+                                overrides: {
+                                    transform: {
+                                        translation: {
+                                            x: stage.clientWidth,
+                                            y: 0
+                                        }
+                                    }
+                                }
+                            }}
+                        )
+                        ,
+                    ]);
+
+                }
 
                 break;
 
