@@ -72,38 +72,6 @@ export default class {
                         attrs: {cboxScaling: 1.0}
                     })
                 ]);
-        
-        if ( !screen.orientation.type.includes('portrait') ){
-
-            GUI.addEventListener('dblclick', async function(e){
-
-                if (e.ctrlKey){
-
-                    const pipWindow = await documentPictureInPicture.requestWindow({
-                        disallowReturnToOpener: true,
-                        preferInitialWindowPlacement: !true,
-                        width: this.getBoundingClientRect()['width'],
-                        height: this.getBoundingClientRect()['height'],
-                    });
-    
-                    const { justifySelf, position } = getComputedStyle(this);
-                        this.style.position = 'static';
-                        this.style.justifySelf = 'stretch';
-                    pipWindow.document.body.appendChild(GUI);
-                    pipWindow.document.body.style.overflow = 'hidden';
-                    pipWindow.addEventListener("pagehide", (event) => {
-                        
-                        this.style.position = position; 
-                        this.style.justifySelf = justifySelf; 
-                        document.body.appendChild(GUI);
-    
-                    });
-
-                }
-                                
-            })
-
-        }
 
     export {
         GUI
