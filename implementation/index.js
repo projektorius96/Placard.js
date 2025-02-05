@@ -28,7 +28,7 @@ export default function setView({stage, Placard, UserSettings}){
     Placard
     .init({stage})
     .on((context)=>{
-        
+
         if ( UserSettings.init({context}) ) {
 
             // DEV_NOTE # scale twice as big, if mobile device is detected :
@@ -41,7 +41,7 @@ export default function setView({stage, Placard, UserSettings}){
                 /* === SECTOR === */
                 case 'sector' :
                 
-                    const 
+                    const
                         [
                             sector$angle
                             , 
@@ -168,6 +168,8 @@ export default function setView({stage, Placard, UserSettings}){
                 /* === GRID === */
                 case 'grid' :
 
+                if (!canvas.isSkewed){
+
                     stage.layers.grid.add([
                         Placard.Views.Grid.draw({
                             canvas: stage.layers.grid, 
@@ -177,6 +179,35 @@ export default function setView({stage, Placard, UserSettings}){
                         )
                         ,
                     ]);
+
+                } else {
+
+                    stage.layers.grid.add([
+                        Placard.Views.Grid.draw({
+                            canvas: stage.layers.grid, 
+                            options: {
+                                lineWidth: 2,
+                            }}
+                        )
+                        ,
+                        Placard.Views.Grid.draw({
+                            canvas: stage.layers.grid, 
+                            options: {
+                                lineWidth: 2,
+                                overrides: {
+                                    transform: {
+                                        translation: {
+                                            x: stage.clientWidth,
+                                            y: 0
+                                        }
+                                    }
+                                }
+                            }}
+                        )
+                        ,
+                    ]);
+
+                }
 
                 break;
 

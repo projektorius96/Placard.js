@@ -7,13 +7,14 @@ import setStyling from './index.css.js';
 export const layer_view = (new URL(import.meta.url)).pathname.split('/').at(-2);
 customElements.define(layer_view, class extends HTMLCanvasElement {
     
-    constructor({name, opacity, hidden, transform = [1 * window.devicePixelRatio, 0, 0, 1 * window.devicePixelRatio, 0, 0]}){
+    constructor({name, opacity, hidden, isSkewed, transform = [1 * window.devicePixelRatio, 0, 0, 1 * window.devicePixelRatio, 0, 0]}){
 
         if ( setStyling.call( super(), {opacity, hidden} ) ) {
 
             this.name = name;
             this.id = this.name;
             this.transform = transform;
+            this.isSkewed = isSkewed;
             this.stack = [];
 
         }
@@ -25,11 +26,7 @@ customElements.define(layer_view, class extends HTMLCanvasElement {
         const
             canvasLayer = this
             ,
-            canvasLayerContext = this.getContext('2d')
-            ,
-            transform$noTranslation = [...canvasLayer.transform].slice(0, canvasLayer.transform.length-2)
-            ,
-            [translationX, translationY] = [...canvasLayer.transform].slice(-2)
+            canvasLayerContext = canvasLayer.getContext('2d')
             ; 
 
         Object.assign(canvasLayer, {
@@ -55,19 +52,6 @@ customElements.define(layer_view, class extends HTMLCanvasElement {
 
                 return true;
                 
-            }
-
-            ,
-
-            transformLayer() {  
-
-                const context = this;
-
-                context.setTransform( ...transform$noTranslation , ( translationX ) , ( translationY ) )
-                if (context.global.options.startAtQ1) context.rotate(-45 * (Math.PI / 180))
-
-                return true;
-
             }
 
         });   

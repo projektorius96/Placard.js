@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
         'slider-input'
         ,
         new Map([
-            ['angle', 0],
+            ['angle',  0],
             ['sense', -1],
         ])
         ,
@@ -29,18 +29,13 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
     const 
         { Stage, Layer } = Placard.ViewGroup
-        ,
-        { Trigonometry } = Placard.Helpers
+        ;
 
-    const stage = new Stage({scale: 20});
+    const stage = new Stage({scale: 30});
         if ( stage ) {
             stage.add([
-                new Layer({ name: 'grid', opacity: 0.25 })
+                new Layer({ name: 'grid', opacity: 0.25, isSkewed: {/* sign: +1 */} })
                 ,
-                new Layer({name: 'wireframe', hidden: true})
-                ,
-                /* new Layer({name: 'ring', hidden: true})
-                , *//* <=== DEV_NOTE (!) # if this is instantiated, session-level (tab) `console.log` may halt the CPU, due to anti-aliasing part in `setRange(0, 0.1 , 720, false)` call, thus commented out */
                 new Layer({ name: 'sector' })
                 ,
             ]);
@@ -48,15 +43,29 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
     /* === GUI === */
 
-        const slider = GUI.getInput({name: 'slider'});
+        const slider = GUI.getInput({name: 'rotation'});
             if (slider){
+
+                GUI.getInput({name: 'sense'}).on('change', function (e) {
+
+                    const 
+                        [ANTI_CLOCKWISE, CLOCKWISE] = [-1, 1]
+                        ,
+                        senseMapper = new Map([
+                            [false, ANTI_CLOCKWISE],
+                            [true, CLOCKWISE],
+                        ])
+                        ;
+                    
+                    sliderInput.sense = senseMapper.get(e.target.checked)
+
+                    // DEV_NOTE # we have to dispatch the following, if we want to see non-linear vector tip's sense (direction) to be synchronized with `sliderInput.sense` value being set;
+                    slider.dispatchEvent(new Event('input'));
+                    
+                })
 
                 slider
                 .on('input', (e)=>{
-
-                    const [ANTI_CLOCKWISE, CLOCKWISE] = [-1, 1];
-                        // DEV_NOTE # (un-)comment "ANTI_" suffix and observe how arc's non-linear vector direction (a.k.a. sense) matches with rotation sense itself
-                        sliderInput.sense = /* ANTI_ */CLOCKWISE;
 
                     const current = { angle: sliderInput.sense * Number( Math.floor( e.target.value ) ) };
                         sliderInput.angle = current.angle;
