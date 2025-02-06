@@ -1,6 +1,7 @@
 import Ring from './ring';
 import Wireframe from './wireframe';
 import RightTriangle from './right-triangle';
+import Parallelogram from './parallelogram';
 
 export function Notifier(prop, oldProp, newProp) {
 
@@ -37,6 +38,15 @@ export default function setView({stage, Placard, UserSettings}){
             let canvas = context.canvas;
             
             switch (canvas.name) {
+
+                case 'parallelogram':
+                    if (stage.layers.grid.isSkewed){
+
+                        context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, stage.grid.X_IN_MIDDLE/*  - stage.grid.GRIDCELL_DIM*2 */, stage.grid.Y_IN_MIDDLE/*  - stage.grid.GRIDCELL_DIM * -2 */); // # Layer-level transformation
+                        Parallelogram.draw({context, Placard});
+
+                    }
+                break;
 
                 /* === SECTOR === */
                 case 'sector' :

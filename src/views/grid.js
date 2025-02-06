@@ -24,8 +24,8 @@ export default class grid {
 
         let sign = canvas?.isSkewed.sign || -1;
         let { a, b, c, d, e, f } = context.getTransform();
-            c = sign * 1;
-            e = -1 * context.canvas.width/2
+            c = sign * 1  * devicePixelRatio;
+            e = -1 * context.canvas.width/2 * devicePixelRatio
         context.setTransform(a, b, c, d, e, f);
 
         /**

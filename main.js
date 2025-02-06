@@ -31,12 +31,15 @@ document.addEventListener('DOMContentLoaded', ()=>{
         { Stage, Layer } = Placard.ViewGroup
         ;
 
-    const stage = new Stage({scale: 30});
+    const stage = new Stage({scale: 20}); console.log(stage.grid);
+    
         if ( stage ) {
             stage.add([
-                new Layer({ name: 'grid', opacity: 0.25, isSkewed: {/* sign: +1 */} })
+                new Layer({ name: 'grid', opacity: 0.25 /* , isSkewed: {sign: -1} */ })
                 ,
-                new Layer({ name: 'sector' })
+                new Layer({ name: 'sector', hidden: !true })
+                ,
+                new Layer({ name: 'parallelogram' })
                 ,
             ]);
         }
