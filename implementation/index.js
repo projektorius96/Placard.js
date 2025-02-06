@@ -1,7 +1,7 @@
 import Ring from './ring';
 import Wireframe from './wireframe';
 import RightTriangle from './right-triangle';
-import Parallelogram from './parallelogram';
+import Cartesian from './cartesian';
 
 export function Notifier(prop, oldProp, newProp) {
 
@@ -39,13 +39,9 @@ export default function setView({stage, Placard, UserSettings}){
             
             switch (canvas.name) {
 
-                case 'parallelogram':
-                    if (stage.layers.grid.isSkewed){
-
-                        context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, stage.grid.X_IN_MIDDLE/*  - stage.grid.GRIDCELL_DIM*2 */, stage.grid.Y_IN_MIDDLE/*  - stage.grid.GRIDCELL_DIM * -2 */); // # Layer-level transformation
-                        Parallelogram.draw({context, Placard});
-
-                    }
+                case 'cartesian':
+                    context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, stage.grid.X_IN_MIDDLE, stage.grid.Y_IN_MIDDLE); // # Layer-level transformation
+                    Cartesian.draw({context, Placard}); 
                 break;
 
                 /* === SECTOR === */

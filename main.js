@@ -1,4 +1,4 @@
-import Placard from './src/index';
+import Placard from './src/index?global=1&local=2';
 import setViews, { Notifier as isObserved } from './implementation/index';
 import Observer from './src/observer';
 import UserSettings, { GUI } from './user-settings';
@@ -31,15 +31,15 @@ document.addEventListener('DOMContentLoaded', ()=>{
         { Stage, Layer } = Placard.ViewGroup
         ;
 
-    const stage = new Stage({scale: 20}); console.log(stage.grid);
+    const stage = new Stage({scale: 20});
     
         if ( stage ) {
             stage.add([
-                new Layer({ name: 'grid', opacity: 0.25 /* , isSkewed: {sign: -1} */ })
+                new Layer({ name: 'grid', opacity: 0.25/* , isSkewed: {sign: -1} */ })
+                ,
+                new Layer({ name: 'cartesian', hidden: !false })
                 ,
                 new Layer({ name: 'sector', hidden: !true })
-                ,
-                new Layer({ name: 'parallelogram' })
                 ,
             ]);
         }
