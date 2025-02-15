@@ -14,7 +14,7 @@ export default class {
         Object.assign(context, {
             global: {
                 options: {
-                    scalingValue: 3,
+                    scalingValue: 4,
                     lineWidth: 4,
                     strokeStyle: 'grey',
                 }
@@ -31,7 +31,7 @@ export default class {
     const 
         DEFAULT_ANGLE = 0
         ,
-        GUI = new HUD({container: document.body, draggable: true, hidden: !true})
+        GUI = new HUD({container: document.body, draggable: true, hidden: /* ! */true})
             
             const rotator = GUI.find( 
 
