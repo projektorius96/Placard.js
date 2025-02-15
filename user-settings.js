@@ -31,7 +31,7 @@ export default class {
     const 
         DEFAULT_ANGLE = 0
         ,
-        GUI = new HUD({container: document.body, draggable: true, hidden: !true})
+        GUI = new HUD({container: document.body, draggable: true, hidden: /* ! */true})
             
             const rotator = GUI.find( 
 

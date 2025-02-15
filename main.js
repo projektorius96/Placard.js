@@ -31,16 +31,16 @@ document.addEventListener('DOMContentLoaded', ()=>{
         { Stage, Layer } = Placard.ViewGroup
         ;
 
-    const stage = new Stage({scale: 20});
+    const stage = new Stage({scale: 8*3});
     
         if ( stage ) {
             stage.add([
-                new Layer({ name: 'grid', opacity: 0.25/* , isSkewed: {sign: -1} */ })
+                new Layer({ name: 'grid', opacity: 0.25, isSkewed: {sign: -1} })
                 ,
-                new Layer({ name: 'cartesian', hidden: !false })
+                new Layer({ name: 'cartesian', hidden: /* ! */false })
                 ,
-                new Layer({ name: 'sector', hidden: !true })
-                ,
+                /* new Layer({ name: 'sector', hidden: !true })
+                , */
             ]);
         }
 

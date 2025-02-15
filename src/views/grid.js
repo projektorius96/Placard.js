@@ -1,4 +1,4 @@
-import { degToRad } from '../trigonometry'
+import { degToRad } from "../trigonometry";
 
 export default class grid {
 
@@ -18,18 +18,25 @@ export default class grid {
 
         const context = canvas.getContext('2d');
         
+        /**
+         * @algorithm 3Din2D (part 1)
+         */
         if (canvas.isSkewed){
 
         context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
 
         let sign = canvas?.isSkewed.sign || -1;
         let { a, b, c, d, e, f } = context.getTransform();
+            let commonDivisor = 2;
             c = sign * 1  * devicePixelRatio;
-            e = -1 * context.canvas.width/2 * devicePixelRatio
+            e = -1 * context.canvas.width/commonDivisor * devicePixelRatio
+            Object.assign(canvas?.isSkewed, {
+                y: Math.sin( degToRad( (90 / commonDivisor) ) )
+            })
         context.setTransform(a, b, c, d, e, f);
 
         /**
-         * @algorithm
+         * @algorithm 3Din2D (part 2)
          * @mediaqueries
          */
         if (context.canvas.width <= context.canvas.height && sign > 0) context.translate(-1 * context.canvas.width/4, 0) ;
@@ -67,12 +74,15 @@ export default class grid {
         function drawGrid(x, y, xLen = gridcellDim, yLen = gridcellDim) {
 
             context.beginPath();
-            context.rect(x, y, xLen, yLen);
+            
+            if (!canvas.isSkewed) {
+                context.rect(x, y, xLen, yLen)
+            } else {
+                context.rect(x, y * canvas.isSkewed.y, xLen, yLen * canvas.isSkewed.y)
+            }
             context.kind = options?.kind || 'grid';
             context.lineWidth = options?.lineWidth || context.global.options.lineWidth;
             context.strokeStyle = options?.strokeStyle || context.global.options.strokeStyle;
-            /* context.stroke(); */
-
             options.hidden ? false : context.stroke();
 
             /* context.restore() */

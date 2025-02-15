@@ -193,6 +193,14 @@ export default function setView({stage, Placard, UserSettings}){
                             canvas: stage.layers.grid, 
                             options: {
                                 lineWidth: 2,
+                                overrides: {
+                                    transform: {
+                                        scale: {
+                                            x: 2,
+                                            y: 2,
+                                        }
+                                    }
+                                }
                             }}
                         )
                         ,
@@ -205,6 +213,10 @@ export default function setView({stage, Placard, UserSettings}){
                                         translation: {
                                             x: stage.clientWidth,
                                             y: 0
+                                        },
+                                        scale: {
+                                            x: 2,
+                                            y: 2,
                                         }
                                     }
                                 }
